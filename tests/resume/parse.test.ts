@@ -173,4 +173,11 @@ describe("parseDocx review bucket", () => {
     const { review } = parseDocx("<p>Some stray paragraph</p>");
     expect(review).toEqual([{ kind: "unmatched-content", text: "some stray paragraph" }]);
   });
+
+  it("collects an image outside the contact header as unmatched", () => {
+    const { review } = parseDocx('<img src="https://example.com/photo.png" />');
+    expect(review).toEqual([
+      { kind: "unmatched-image", text: "https://example.com/photo.png" },
+    ]);
+  });
 });
