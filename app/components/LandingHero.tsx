@@ -25,7 +25,11 @@ const features = [
   },
 ] as const;
 
-export function LandingHero() {
+export function LandingHero({ signedIn = false }: { signedIn?: boolean }) {
+  const primaryCta = signedIn
+    ? { href: "/dashboard", label: "Go to dashboard" }
+    : { href: "/sign-up", label: "Get started" };
+
   return (
     <div className="flex flex-1 flex-col bg-cream-paper">
       <header className="mx-auto flex w-full max-w-[var(--page-max-width)] items-center justify-between px-14 py-21 md:px-28">
@@ -49,17 +53,19 @@ export function LandingHero() {
           </a>
         </nav>
         <div className="flex items-center gap-21">
+          {!signedIn && (
+            <Link
+              href="/sign-in"
+              className="text-body font-semibold text-charcoal transition-colors hover:text-forest-ink"
+            >
+              Sign in
+            </Link>
+          )}
           <Link
-            href="/sign-in"
-            className="text-body font-semibold text-charcoal transition-colors hover:text-forest-ink"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/sign-up"
+            href={primaryCta.href}
             className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-18 py-11 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
           >
-            Get started
+            {primaryCta.label}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
@@ -82,10 +88,10 @@ export function LandingHero() {
               </p>
               <div className="flex flex-wrap items-center gap-14" id="get-started">
                 <Link
-                  href="/sign-up"
+                  href={primaryCta.href}
                   className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-21 py-14 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
                 >
-                  Start free
+                  {signedIn ? primaryCta.label : "Start free"}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <a
@@ -299,10 +305,10 @@ export function LandingHero() {
               </p>
             </div>
             <Link
-              href="/sign-up"
+              href={primaryCta.href}
               className="inline-flex shrink-0 items-center gap-9 rounded-buttons bg-forest-ink px-28 py-18 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
             >
-              Get started
+              {primaryCta.label}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>

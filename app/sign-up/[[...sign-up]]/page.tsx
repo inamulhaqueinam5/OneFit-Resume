@@ -8,7 +8,7 @@ export default function SignUpPage() {
       <div className="mb-28">
         <Brand />
       </div>
-      <SignUp appearance={clerkAppearance} />
+      <SignUp appearance={clerkAppearance} fallbackRedirectUrl="/dashboard" />
     </div>
   );
 }

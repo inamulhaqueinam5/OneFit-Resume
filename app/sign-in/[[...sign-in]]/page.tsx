@@ -8,7 +8,7 @@ export default function SignInPage() {
       <div className="mb-28">
         <Brand />
       </div>
-      <SignIn appearance={clerkAppearance} />
+      <SignIn appearance={clerkAppearance} fallbackRedirectUrl="/dashboard" />
     </div>
   );
 }
