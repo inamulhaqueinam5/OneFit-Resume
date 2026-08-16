@@ -1,6 +1,7 @@
 export * from "./types";
 export { sectionCatalog } from "./catalog";
 export { parseDocx } from "./parse";
+export { assessImport, deserializeResume } from "./profile";
 export {
   addEntry,
   addSection,
