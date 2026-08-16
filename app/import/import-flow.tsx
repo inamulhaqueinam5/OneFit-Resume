@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 import { AlertTriangle, ArrowRight, Check, FileText, RotateCcw } from "lucide-react";
 import { createMasterProfile, parseUploadedDocx, type ParsedUpload } from "./actions";
 import type { Resume } from "@/lib/resume/types";
@@ -67,6 +68,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
             OneFit Resume
           </span>
         </div>
+        <UserButton />
       </header>
 
       <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-14 pb-70 md:px-28">

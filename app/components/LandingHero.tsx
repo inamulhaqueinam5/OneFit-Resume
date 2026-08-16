@@ -48,13 +48,21 @@ export function LandingHero() {
             FAQ
           </a>
         </nav>
-        <Link
-          href="/sign-up"
-          className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-18 py-11 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
-        >
-          Get started
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </Link>
+        <div className="flex items-center gap-21">
+          <Link
+            href="/sign-in"
+            className="text-body font-semibold text-charcoal transition-colors hover:text-forest-ink"
+          >
+            Sign in
+          </Link>
+          <Link
+            href="/sign-up"
+            className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-18 py-11 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
+          >
+            Get started
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
       </header>
 
       <main className="flex flex-1 flex-col">

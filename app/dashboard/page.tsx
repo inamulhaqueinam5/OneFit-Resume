@@ -1,5 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { ArrowRight } from "lucide-react";
+import { AppHeader } from "@/app/components/AppHeader";
 import { EmptyState } from "@/app/components/EmptyState";
 import { loadMasterProfile } from "@/lib/master-profile";
 
@@ -12,11 +13,17 @@ export default async function DashboardPage() {
 
   if (!profile) {
     const user = await currentUser();
-    return <EmptyState name={user?.firstName ?? undefined} />;
+    return (
+      <div className="flex flex-1 flex-col bg-cream-paper">
+        <AppHeader />
+        <EmptyState name={user?.firstName ?? undefined} />
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-1 flex-col bg-cream-paper">
+      <AppHeader />
       <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col justify-center px-14 py-70 md:px-28">
         <div className="max-w-2xl">
           <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
