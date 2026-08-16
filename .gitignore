@@ -46,3 +46,6 @@ NOTES-from-gemini.md
 
 # local visual-reference artifacts (real resume PII)
 /My Resume Example/
+
+# clerk configuration (can include secrets)
+/.clerk/

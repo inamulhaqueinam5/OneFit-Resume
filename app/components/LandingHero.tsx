@@ -1,4 +1,5 @@
 import { ArrowRight, FileText, Layers, Printer, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 const features = [
   {
@@ -47,13 +48,13 @@ export function LandingHero() {
             FAQ
           </a>
         </nav>
-        <a
-          href="#get-started"
+        <Link
+          href="/sign-up"
           className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-18 py-11 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
         >
           Get started
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </a>
+        </Link>
       </header>
 
       <main className="flex flex-1 flex-col">
@@ -72,13 +73,13 @@ export function LandingHero() {
                 wrestling Word again.
               </p>
               <div className="flex flex-wrap items-center gap-14" id="get-started">
-                <a
-                  href="#get-started"
+                <Link
+                  href="/sign-up"
                   className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-21 py-14 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
                 >
                   Start free
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </a>
+                </Link>
                 <a
                   href="#how"
                   className="inline-flex items-center gap-9 rounded-buttons border border-border-mist bg-cream-paper px-21 py-14 text-body text-forest-ink transition-colors hover:bg-keylime-wash"
@@ -289,13 +290,13 @@ export function LandingHero() {
                 as you need.
               </p>
             </div>
-            <a
-              href="#get-started"
+            <Link
+              href="/sign-up"
               className="inline-flex shrink-0 items-center gap-9 rounded-buttons bg-forest-ink px-28 py-18 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
             >
               Get started
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </a>
+            </Link>
           </div>
         </section>
       </main>

@@ -1,9 +1,9 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import mammoth from "mammoth";
 import { assessImport, deserializeResume, parseDocx } from "@/lib/resume";
 import { saveMasterProfile } from "@/lib/master-profile";
-import { getCurrentUserId } from "@/lib/current-user";
 import type { ParseResult, Resume } from "@/lib/resume/types";
 
 export type ParsedUpload = {
@@ -33,6 +33,7 @@ export async function parseUploadedDocx(formData: FormData): Promise<ParsedUploa
 }
 
 export async function createMasterProfile(resume: Resume): Promise<void> {
+  const { userId } = await auth.protect();
   const validated = deserializeResume(resume);
-  await saveMasterProfile(getCurrentUserId(), validated);
+  await saveMasterProfile(userId, validated);
 }
