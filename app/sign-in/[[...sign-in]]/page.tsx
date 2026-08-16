@@ -1,4 +1,4 @@
-import { SignIn } from "@clerk/nextjs";
+import { ClerkLoaded, ClerkLoading, SignIn } from "@clerk/nextjs";
 import { Brand } from "@/app/components/Brand";
 import { clerkAppearance } from "@/lib/clerk-appearance";
 
@@ -8,7 +8,14 @@ export default function SignInPage() {
       <div className="mb-28">
         <Brand />
       </div>
-      <SignIn appearance={clerkAppearance} fallbackRedirectUrl="/dashboard" />
+      <ClerkLoading>
+        <p className="text-body text-charcoal" role="status">
+          Loading sign-in...
+        </p>
+      </ClerkLoading>
+      <ClerkLoaded>
+        <SignIn appearance={clerkAppearance} fallbackRedirectUrl="/dashboard" />
+      </ClerkLoaded>
     </div>
   );
 }
