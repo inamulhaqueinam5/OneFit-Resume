@@ -85,7 +85,6 @@ export function ResumeRenderer({ resume, className }: ResumeRendererProps) {
       <article
         className={pageClassName}
         aria-label={`${resume.contact.name || "Resume"} resume`}
-        data-compression-scale={scale}
       >
         <header className={styles.header}>
           <div className={styles.identity}>

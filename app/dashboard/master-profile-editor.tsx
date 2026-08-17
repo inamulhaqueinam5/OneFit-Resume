@@ -765,7 +765,7 @@ export function MasterProfileEditor({
         </p>
       )}
 
-      <div className="grid items-start gap-28 lg:grid-cols-[minmax(0,1fr)_minmax(390px,0.9fr)]">
+      <div className="resume-editor-grid grid items-start gap-28 lg:grid-cols-[minmax(0,1fr)_minmax(390px,0.9fr)]">
          <div className="flex min-w-0 flex-col gap-21 print:hidden">
           <ContactEditor
             contact={resume.contact}
@@ -876,7 +876,7 @@ export function MasterProfileEditor({
         </div>
 
         <aside className="min-w-0 lg:sticky lg:top-21">
-          <div className="flex flex-col gap-14 rounded-cards bg-slate-hush p-14 md:p-21">
+           <div className="resume-preview-panel flex flex-col gap-14 rounded-cards bg-slate-hush p-14 md:p-21">
              <div className="flex items-center justify-between gap-14 px-7 print:hidden">
               <div>
                 <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">

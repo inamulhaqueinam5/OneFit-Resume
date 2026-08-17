@@ -27,4 +27,15 @@ body {
     overflow: visible;
     background: #fff;
   }
+
+  body:has(.resume-print-target) .resume-editor-grid {
+    display: block;
+    padding: 0;
+  }
+
+  body:has(.resume-print-target) .resume-preview-panel {
+    display: block;
+    padding: 0;
+    background: #fff;
+  }
 }

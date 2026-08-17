@@ -8,8 +8,6 @@
 
 .page {
   box-sizing: border-box;
-  width: 210mm;
-  min-height: 297mm;
   margin: 0 auto;
   padding: calc(18mm / var(--resume-scale)) calc(17mm / var(--resume-scale)) calc(16mm / var(--resume-scale));
   background: #fff;
@@ -69,7 +67,7 @@
   .canvas { padding: 0; overflow: visible; background: #fff; }
   .page {
     width: calc(100% / var(--resume-scale));
-    min-height: calc(297mm / var(--resume-scale));
+    min-height: 0;
     margin: 0;
     padding: 0;
   }

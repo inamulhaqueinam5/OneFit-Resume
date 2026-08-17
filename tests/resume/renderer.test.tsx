@@ -166,6 +166,5 @@ describe("ResumeRenderer", () => {
     const canvas = screen.getByRole("document");
     expect(canvas).toHaveAttribute("data-compression-level", "90");
     expect(canvas.style.getPropertyValue("--resume-scale")).toBe("0.9");
-    expect(canvas.querySelector("article")).toHaveAttribute("data-compression-scale", "0.9");
   });
 });
