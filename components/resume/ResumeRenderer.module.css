@@ -17,8 +17,10 @@
   font-family: Arial, Helvetica, sans-serif;
   font-size: 9.5pt;
   line-height: 1.25;
-  transform: scale(var(--resume-scale));
-  transform-origin: top center;
+  /* Zoom participates in layout, so compressed content can reflow before print pagination. */
+  zoom: var(--resume-scale);
+  width: calc(210mm / var(--resume-scale));
+  min-height: calc(297mm / var(--resume-scale));
 }
 
 .header {
@@ -65,7 +67,12 @@
 
 @media print {
   .canvas { padding: 0; overflow: visible; background: #fff; }
-  .page { width: auto; min-height: 0; margin: 0; padding: 0; }
+  .page {
+    width: calc(100% / var(--resume-scale));
+    min-height: calc(297mm / var(--resume-scale));
+    margin: 0;
+    padding: 0;
+  }
 }
 
 @page { size: A4; margin: 18mm 17mm 16mm; }

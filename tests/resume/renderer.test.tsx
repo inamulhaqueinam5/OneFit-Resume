@@ -160,11 +160,12 @@ describe("ResumeRenderer", () => {
     expect(screen.getByText(/University/).parentElement?.className).toContain("subtitle");
   });
 
-  it("applies the compression level as a scale step on the preview", () => {
+  it("applies compression as a reflowing zoom step on the preview and print DOM", () => {
     render(<ResumeRenderer resume={resume} />);
 
     const canvas = screen.getByRole("document");
     expect(canvas).toHaveAttribute("data-compression-level", "90");
     expect(canvas.style.getPropertyValue("--resume-scale")).toBe("0.9");
+    expect(canvas.querySelector("article")).toHaveAttribute("data-compression-scale", "0.9");
   });
 });

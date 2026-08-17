@@ -18,3 +18,24 @@ body {
   font-family: var(--font-suisse-intl), ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
+
+@media print {
+  /* Native print should contain the same resume DOM, not the editing shell around it. */
+  body:has(.resume-print-target) * {
+    visibility: hidden;
+  }
+
+  body:has(.resume-print-target) .resume-print-target,
+  body:has(.resume-print-target) .resume-print-target * {
+    visibility: visible;
+  }
+
+  body:has(.resume-print-target) .resume-print-target {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    background: #fff;
+  }
+}

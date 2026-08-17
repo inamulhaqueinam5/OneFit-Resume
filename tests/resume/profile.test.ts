@@ -93,4 +93,23 @@ describe("deserializeResume", () => {
     } as unknown;
     expect(() => deserializeResume(json)).toThrow();
   });
+
+  it("normalizes persisted compression to the supported ten-percent range", () => {
+    const { resume } = parseDocx(FIXTURE);
+    const json = JSON.parse(JSON.stringify(resume)) as Record<string, unknown>;
+
+    json.compressionLevel = 95;
+    expect(deserializeResume(json).compressionLevel).toBe(100);
+
+    json.compressionLevel = 4;
+    expect(deserializeResume(json).compressionLevel).toBe(10);
+  });
+
+  it("rejects non-finite persisted compression values", () => {
+    const { resume } = parseDocx(FIXTURE);
+    const json = JSON.parse(JSON.stringify(resume)) as Record<string, unknown>;
+
+    json.compressionLevel = Number.NaN;
+    expect(() => deserializeResume(json)).toThrow();
+  });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Printer, Trash2 } from "lucide-react";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -687,6 +687,10 @@ export function MasterProfileEditor({
     updateResume((current) => setCompressionLevel(current, current.compressionLevel + delta));
   }
 
+  function printResume() {
+    window.print();
+  }
+
   function changeContact(field: EditableContactField, value: string) {
     updateResume((current) =>
       updateContact(current, { [field]: value } as Partial<Omit<Contact, "links">>),
@@ -740,9 +744,19 @@ export function MasterProfileEditor({
             Changes appear in the template preview immediately and save automatically after you pause.
           </p>
         </div>
-        <p className="rounded-badges bg-keylime-wash px-14 py-9 text-caption text-forest-ink" role="status">
-          {statusLabel(status)}
-        </p>
+         <div className="flex items-center gap-11">
+           <button
+             className="inline-flex items-center gap-7 rounded-nav border border-border-mist bg-cream-paper px-11 py-9 text-caption text-forest-ink hover:text-forest-shadow"
+             type="button"
+             onClick={printResume}
+           >
+             <Printer className="h-3.5 w-3.5" aria-hidden="true" />
+             Print resume
+           </button>
+           <p className="rounded-badges bg-keylime-wash px-14 py-9 text-caption text-forest-ink" role="status">
+             {statusLabel(status)}
+           </p>
+         </div>
       </div>
 
       {editorError && (
@@ -912,7 +926,7 @@ export function MasterProfileEditor({
                 </div>
               </div>
             )}
-            <div className="max-h-[calc(100vh-170px)] overflow-auto rounded-cards bg-cream-paper">
+            <div className="resume-print-target max-h-[calc(100vh-170px)] overflow-auto rounded-cards bg-cream-paper">
               <ResumeRenderer resume={resume} />
             </div>
           </div>

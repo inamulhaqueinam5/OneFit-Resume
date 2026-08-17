@@ -79,10 +79,14 @@ export function ResumeRenderer({ resume, className }: ResumeRendererProps) {
     <div
       className={styles.canvas}
       role="document"
-      data-compression-level={resume.compressionLevel}
-      style={pageStyle}
+        data-compression-level={resume.compressionLevel}
+        style={pageStyle}
     >
-      <article className={pageClassName} aria-label={`${resume.contact.name || "Resume"} resume`}>
+      <article
+        className={pageClassName}
+        aria-label={`${resume.contact.name || "Resume"} resume`}
+        data-compression-scale={scale}
+      >
         <header className={styles.header}>
           <div className={styles.identity}>
             <h1>{resume.contact.name}</h1>

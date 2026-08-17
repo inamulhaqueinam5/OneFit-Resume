@@ -1,4 +1,5 @@
 import { CUSTOM_SECTION_ID, type ParseResult, type Resume } from "./types";
+import { setCompressionLevel } from "./operations";
 
 export type ImportAssessment = {
   isOfficialTemplate: boolean;
@@ -122,11 +123,11 @@ export function deserializeResume(value: unknown): Resume {
   if (!Array.isArray(value.sections) || !value.sections.every(isSection)) {
     throw new Error("Invalid Master Profile: missing or malformed sections");
   }
-  if (typeof value.compressionLevel !== "number") {
+  if (typeof value.compressionLevel !== "number" || !Number.isFinite(value.compressionLevel)) {
     throw new Error("Invalid Master Profile: missing compressionLevel");
   }
 
-  return value as unknown as Resume;
+  return setCompressionLevel(value as unknown as Resume, value.compressionLevel);
 }
 
 export function deserializeMasterProfile(value: unknown): Resume {

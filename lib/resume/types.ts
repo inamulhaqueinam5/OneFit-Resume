@@ -78,7 +78,7 @@ export type ParseResult = {
 
 export const CUSTOM_SECTION_ID = "custom";
 
-export const MIN_COMPRESSION_LEVEL = 0;
+export const MIN_COMPRESSION_LEVEL = 10;
 
 export const MAX_COMPRESSION_LEVEL = 100;
 

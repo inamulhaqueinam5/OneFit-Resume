@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MasterProfileEditor } from "@/app/dashboard/master-profile-editor";
 import type { Resume } from "@/lib/resume";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 const resume: Resume = {
   id: "master-1",
@@ -38,6 +38,17 @@ const resume: Resume = {
 };
 
 describe("MasterProfileEditor", () => {
+  it("opens the native print dialog from the resume editor", () => {
+    const print = vi.spyOn(window, "print").mockImplementation(() => undefined);
+    render(<MasterProfileEditor initialResume={resume} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Print resume" }));
+
+    expect(print).toHaveBeenCalledOnce();
+    expect(screen.getByRole("document").parentElement).toHaveClass("resume-print-target");
+    print.mockRestore();
+  });
+
   it("updates Contact and Entry Fields in the live preview", () => {
     render(<MasterProfileEditor initialResume={resume} />);
 
