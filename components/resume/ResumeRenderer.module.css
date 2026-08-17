@@ -1,0 +1,71 @@
+.canvas {
+  --resume-scale: 1;
+  background: #e8e8e8;
+  min-height: 100%;
+  overflow: auto;
+  padding: 2rem;
+}
+
+.page {
+  box-sizing: border-box;
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 18mm 17mm 16mm;
+  background: #fff;
+  color: #111;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.25;
+  transform: scale(var(--resume-scale));
+  transform-origin: top center;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 32mm;
+  gap: 8mm;
+  border-bottom: 1px solid #222;
+  padding-bottom: 5mm;
+}
+
+.identity h1 {
+  margin: 0;
+  font-size: 20pt;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+.tagline { margin: 1.5mm 0 3mm; font-size: 10pt; }
+.contact { display: flex; flex-wrap: wrap; gap: 1mm 3mm; font-size: 8.5pt; }
+.contactLine { white-space: nowrap; }
+.contactLine strong { font-weight: 700; }
+.contact a, .headerLink, .page a { color: inherit; text-decoration: none; }
+.headerLink:not(:last-child)::after { content: " |"; margin-left: 3mm; }
+.pictureSlot { display: flex; align-items: flex-start; justify-content: flex-end; }
+.pictureSlot img, .pictureSlot::after { width: 28mm; height: 28mm; border-radius: 50%; }
+.pictureSlot img { object-fit: cover; }
+.pictureSlot:has(img)::after { display: none; }
+.pictureSlot::after { content: ""; display: block; border: 1px solid #222; }
+
+.sections { padding-top: 4mm; }
+.section { break-inside: avoid; margin-bottom: 4mm; }
+.section h2 { margin: 0 0 2mm; border-bottom: 1px solid #222; padding-bottom: .8mm; font-size: 10.5pt; font-weight: 700; text-transform: uppercase; }
+.entry { break-inside: avoid; position: relative; margin-bottom: 2.5mm; }
+.title { font-weight: 700; }
+.subtitle { display: inline; }
+.subtitle { white-space: pre-line; }
+.dates { float: right; font-style: italic; }
+.paragraph, .publication, .textLine { margin: 0 0 1.5mm; }
+.bullets { margin: 1.5mm 0 0 5mm; padding: 0; }
+.bullets li { padding-left: 1mm; }
+.tags { display: flex; flex-wrap: wrap; gap: 1mm 2mm; margin: 1mm 0 0; padding: 0; list-style: none; }
+.tags li { border: 1px solid #777; border-radius: 1mm; padding: .5mm 1.5mm; }
+
+@media print {
+  .canvas { padding: 0; overflow: visible; background: #fff; }
+  .page { margin: 0; }
+}
+
+@page { size: A4; margin: 0; }

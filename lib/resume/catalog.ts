@@ -36,6 +36,7 @@ export const sectionCatalog: SectionCatalog = [
     title: "Publications",
     keywords: ["publications"],
     fields: ["text-line"],
+    textLineStyle: "paragraph",
   },
   {
     id: "extracurricular-activities",

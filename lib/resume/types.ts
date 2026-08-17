@@ -53,6 +53,7 @@ export type SectionCatalogItem = {
   title: string;
   keywords: string[];
   fields: EntryFieldKind[];
+  textLineStyle?: "paragraph" | "line";
 };
 
 export type SectionCatalog = SectionCatalogItem[];
