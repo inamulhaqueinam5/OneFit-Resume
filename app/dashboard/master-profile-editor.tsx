@@ -732,7 +732,7 @@ export function MasterProfileEditor({
 
   return (
     <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-14 pb-70 md:px-28">
-      <div className="flex flex-col gap-14 py-35 md:flex-row md:items-end md:justify-between">
+       <div className="flex flex-col gap-14 py-35 md:flex-row md:items-end md:justify-between print:hidden">
         <div>
              <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
              {documentMode ? "Resume Document" : "Master Profile"}
@@ -760,13 +760,13 @@ export function MasterProfileEditor({
       </div>
 
       {editorError && (
-        <p className="mb-21 rounded-cards bg-slate-hush p-18 text-body text-charcoal" role="alert">
+        <p className="mb-21 rounded-cards bg-slate-hush p-18 text-body text-charcoal print:hidden" role="alert">
           {editorError}
         </p>
       )}
 
       <div className="grid items-start gap-28 lg:grid-cols-[minmax(0,1fr)_minmax(390px,0.9fr)]">
-        <div className="flex min-w-0 flex-col gap-21">
+         <div className="flex min-w-0 flex-col gap-21 print:hidden">
           <ContactEditor
             contact={resume.contact}
             onChange={changeContact}
@@ -877,7 +877,7 @@ export function MasterProfileEditor({
 
         <aside className="min-w-0 lg:sticky lg:top-21">
           <div className="flex flex-col gap-14 rounded-cards bg-slate-hush p-14 md:p-21">
-            <div className="flex items-center justify-between gap-14 px-7">
+             <div className="flex items-center justify-between gap-14 px-7 print:hidden">
               <div>
                 <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
                   Live Preview
@@ -889,7 +889,7 @@ export function MasterProfileEditor({
               </span>
             </div>
             {documentMode && (
-              <div className="flex items-center justify-between gap-14 border-t border-border-mist px-7 pt-14">
+               <div className="flex items-center justify-between gap-14 border-t border-border-mist px-7 pt-14 print:hidden">
                 <div>
                   <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
                     Compression

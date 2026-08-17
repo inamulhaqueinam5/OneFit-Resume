@@ -20,19 +20,8 @@ body {
 }
 
 @media print {
-  /* Native print should contain the same resume DOM, not the editing shell around it. */
-  body:has(.resume-print-target) * {
-    visibility: hidden;
-  }
-
-  body:has(.resume-print-target) .resume-print-target,
-  body:has(.resume-print-target) .resume-print-target * {
-    visibility: visible;
-  }
-
+  /* Keep the resume in normal flow so browser pagination can produce multiple pages. */
   body:has(.resume-print-target) .resume-print-target {
-    position: fixed;
-    inset: 0;
     width: 100%;
     max-height: none;
     overflow: visible;
