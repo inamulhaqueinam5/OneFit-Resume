@@ -68,7 +68,7 @@ describe("MasterProfileEditor", () => {
     expect(screen.queryByLabelText("Contact link 1 label")).not.toBeInTheDocument();
   });
 
-  it("supports document-only custom sections and preserves hidden section data", () => {
+  it("supports document-only tailoring without losing hidden data", () => {
     render(
       <MasterProfileEditor
         documentId="doc-1"
@@ -81,6 +81,13 @@ describe("MasterProfileEditor", () => {
     fireEvent.click(screen.getByLabelText("Show Experience section"));
     expect(screen.getByLabelText("Show Experience section")).not.toBeChecked();
     expect(screen.getByLabelText("Experience entry 1 Title text run 1 text")).toHaveValue("Engineer");
+    fireEvent.click(screen.getByLabelText("Show Experience section"));
+    expect(screen.getByLabelText("Show Experience section")).toBeChecked();
+
+    fireEvent.click(screen.getByRole("button", { name: "Add Entry" }));
+    expect(screen.getByLabelText("Experience entry 2 Title text run 1 text")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Remove Experience entry 2" }));
+    expect(screen.queryByLabelText("Experience entry 2 Title text run 1 text")).not.toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText("New section type"), {
       target: { value: "custom" },
@@ -92,5 +99,7 @@ describe("MasterProfileEditor", () => {
 
     expect(screen.getByDisplayValue("Awards")).toBeInTheDocument();
     expect(screen.getByText("1 Entry")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Remove Awards section" }));
+    expect(screen.queryByDisplayValue("Awards")).not.toBeInTheDocument();
   });
 });

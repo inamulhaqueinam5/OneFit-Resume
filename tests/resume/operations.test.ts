@@ -34,6 +34,17 @@ describe("createFromMaster", () => {
     expect(edited.sections[0].visible).toBe(false);
     expect(master.sections[0].visible).toBe(true);
   });
+
+  it("keeps tailoring isolated between documents and the Master Profile", () => {
+    const master = sampleResume();
+    const first = createFromMaster(master);
+    const second = createFromMaster(master);
+    const edited = toggleSectionVisibility(first, first.sections[0].id);
+
+    expect(edited.sections[0].visible).toBe(false);
+    expect(master.sections[0].visible).toBe(true);
+    expect(second.sections[0].visible).toBe(true);
+  });
 });
 
 describe("cloneDocument", () => {
