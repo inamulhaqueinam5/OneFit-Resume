@@ -17,6 +17,7 @@ const REVIEW_KIND_LABEL: Record<string, string> = {
 
 export function ImportFlow({ existingProfile }: { existingProfile: Resume | null }) {
   const router = useRouter();
+  const isReimport = existingProfile !== null;
   const [step, setStep] = useState<Step>("upload");
   const [parsed, setParsed] = useState<ParsedUpload | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -77,11 +78,17 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
             Import
           </p>
           <h1 className="mt-14 font-faire-octave text-heading text-forest-ink">
-            {step === "done" ? "Master Profile created" : "Import your Word template"}
+            {step === "done"
+              ? isReimport
+                ? "Master Profile updated"
+                : "Master Profile created"
+              : "Import your Word template"}
           </h1>
           <p className="mt-18 text-body leading-relaxed text-charcoal">
             {step === "done"
-              ? "Your baseline is ready. Resume Documents can now be tailored from it."
+              ? isReimport
+                ? "Your Master Profile and its imported Sections were refreshed. Existing Resume Documents were left unchanged."
+                : "Your baseline is ready. Resume Documents can now be tailored from it."
               : "Upload the official OneFit template. We parse it into a structured Master Profile and show anything we could not match before it is saved."}
           </p>
         </div>
@@ -221,7 +228,11 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
                 className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-21 py-14 text-body text-cream-paper transition-colors hover:bg-forest-shadow disabled:opacity-60"
               >
                 <Check className="h-4 w-4" aria-hidden="true" />
-                {isPending ? "Saving…" : "Confirm & create Master Profile"}
+                {isPending
+                  ? "Saving…"
+                  : isReimport
+                    ? "Confirm & update Master Profile"
+                    : "Confirm & create Master Profile"}
               </button>
               <button
                 onClick={onReset}
@@ -239,7 +250,9 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
           <div className="flex flex-col items-start gap-21 rounded-cards bg-keylime-wash p-28 md:p-42">
             <Check className="h-5 w-5 text-forest-ink" aria-hidden="true" />
             <p className="text-subheading font-semibold text-forest-ink">
-              Your Master Profile is saved and loads back on reload.
+              {isReimport
+                ? "Your Master Profile is updated and existing Resume Documents remain unchanged."
+                : "Your Master Profile is saved and loads back on reload."}
             </p>
             <button
               onClick={onReset}

@@ -28,6 +28,42 @@ const resume = {
 };
 
 describe("saveMasterProfile", () => {
+  it("replaces an existing profile with the imported section catalog", async () => {
+    const existing = { ...resume, contact: { ...resume.contact, name: "Old" } };
+    const imported = {
+      ...resume,
+      contact: { ...resume.contact, name: "New" },
+      sections: [
+        {
+          id: "new-section",
+          catalogId: "experience",
+          title: "Experience",
+          entries: [],
+          visible: true,
+        },
+      ],
+    };
+    mocks.current = { resume: existing };
+    const transaction = {
+      masterProfile: {
+        findUnique: vi.fn(async () => mocks.current),
+        update: vi.fn(async ({ data }: { data: { resume: unknown } }) => {
+          mocks.current = { resume: data.resume };
+          return mocks.current;
+        }),
+      },
+    };
+    mocks.prisma.$transaction.mockImplementation(async (callback) => callback(transaction));
+
+    await saveMasterProfile("user-1", imported);
+
+    expect(transaction.masterProfile.update).toHaveBeenCalledWith({
+      where: { clerkUserId: "user-1" },
+      data: { resume: imported },
+    });
+    expect(mocks.current?.resume).toEqual(imported);
+  });
+
   it("keeps the newest write when an older save arrives later", async () => {
     mocks.current = null;
     const transaction = {
