@@ -50,9 +50,9 @@
 .pictureSlot::after { content: ""; display: block; border: 1px solid #222; }
 
 .sections { padding-top: 4mm; }
-.section { break-inside: avoid; margin-bottom: 4mm; }
-.section h2 { margin: 0 0 2mm; border-bottom: 1px solid #222; padding-bottom: .8mm; font-size: 10.5pt; font-weight: 700; text-transform: uppercase; }
-.entry { break-inside: avoid; position: relative; margin-bottom: 2.5mm; }
+.section { margin-bottom: 4mm; }
+.section h2 { break-after: avoid; page-break-after: avoid; margin: 0 0 2mm; border-bottom: 1px solid #222; padding-bottom: .8mm; font-size: 10.5pt; font-weight: 700; text-transform: uppercase; }
+.entry { break-inside: avoid; page-break-inside: avoid; position: relative; margin-bottom: 2.5mm; }
 .title { font-weight: 700; }
 .subtitle { display: inline; }
 .subtitle { white-space: pre-line; }

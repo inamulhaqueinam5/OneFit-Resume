@@ -102,4 +102,31 @@ describe("MasterProfileEditor", () => {
     fireEvent.click(screen.getByRole("button", { name: "Remove Awards section" }));
     expect(screen.queryByDisplayValue("Awards")).not.toBeInTheDocument();
   });
+
+  it("provides a per-document compression control in 10% steps", () => {
+    render(
+      <MasterProfileEditor
+        documentId="doc-1"
+        documentMode
+        documentName="Product Designer"
+        initialResume={resume}
+      />,
+    );
+
+    expect(screen.getByLabelText("Compression level")).toHaveTextContent("100%");
+
+    fireEvent.click(screen.getByRole("button", { name: "Decrease compression" }));
+    expect(screen.getByLabelText("Compression level")).toHaveTextContent("90%");
+    expect(screen.getByRole("document")).toHaveAttribute("data-compression-level", "90");
+
+    fireEvent.click(screen.getByRole("button", { name: "Increase compression" }));
+    expect(screen.getByLabelText("Compression level")).toHaveTextContent("100%");
+  });
+
+  it("does not show the compression control in Master Profile mode", () => {
+    render(<MasterProfileEditor initialResume={resume} />);
+
+    expect(screen.queryByLabelText("Compression level")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Decrease compression" })).not.toBeInTheDocument();
+  });
 });

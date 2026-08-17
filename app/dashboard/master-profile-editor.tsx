@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -18,12 +18,15 @@ import {
   reorderEntries,
   reorderSections,
   sectionCatalog,
+  setCompressionLevel,
   toggleSectionVisibility,
   updateContact,
   updateContactLink,
   updateEntryField,
   updateSectionTitle,
+  COMPRESSION_STEP,
   CUSTOM_SECTION_ID,
+  MAX_COMPRESSION_LEVEL,
   type Contact,
   type ContactLink,
   type EntryField,
@@ -37,6 +40,9 @@ import { persistResumeDocument, sendResumeDocumentBeacon } from "@/app/documents
 
 type EditableContactField = Exclude<keyof Contact, "links">;
 type RunsField = Extract<EntryField, { runs: TextRun[] }>;
+
+const compressionButtonClass =
+  "inline-flex h-35 w-35 items-center justify-center rounded-nav border border-border-mist bg-cream-paper text-forest-ink hover:text-forest-shadow disabled:opacity-50";
 
 const contactFields: Array<{
   key: EditableContactField;
@@ -676,6 +682,10 @@ export function MasterProfileEditor({
     setEditorError(null);
   }
 
+  function changeCompression(delta: number) {
+    updateResume((current) => setCompressionLevel(current, current.compressionLevel + delta));
+  }
+
   function changeContact(field: EditableContactField, value: string) {
     updateResume((current) =>
       updateContact(current, { [field]: value } as Partial<Omit<Contact, "links">>),
@@ -863,6 +873,44 @@ export function MasterProfileEditor({
                 A4
               </span>
             </div>
+            {documentMode && (
+              <div className="flex items-center justify-between gap-14 border-t border-border-mist px-7 pt-14">
+                <div>
+                  <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
+                    Compression
+                  </p>
+                  <p className="mt-7 text-caption text-charcoal">
+                    Compress to fit on one page
+                  </p>
+                </div>
+                <div className="flex items-center gap-9">
+                  <button
+                    aria-label="Decrease compression"
+                    className={compressionButtonClass}
+                    disabled={resume.compressionLevel <= 0}
+                    type="button"
+                    onClick={() => changeCompression(-COMPRESSION_STEP)}
+                  >
+                    <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                  <span
+                    aria-label="Compression level"
+                    className="min-w-42 text-center text-body font-semibold text-forest-ink"
+                  >
+                    {resume.compressionLevel}%
+                  </span>
+                  <button
+                    aria-label="Increase compression"
+                    className={compressionButtonClass}
+                    disabled={resume.compressionLevel >= MAX_COMPRESSION_LEVEL}
+                    type="button"
+                    onClick={() => changeCompression(COMPRESSION_STEP)}
+                  >
+                    <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="max-h-[calc(100vh-170px)] overflow-auto rounded-cards bg-cream-paper">
               <ResumeRenderer resume={resume} />
             </div>
