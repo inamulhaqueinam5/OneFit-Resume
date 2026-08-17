@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Plus, Trash2 } from "lucide-react";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { ResumeRenderer } from "@/components/resume/ResumeRenderer";
 import {
   addContactLink,
@@ -12,12 +15,15 @@ import {
   removeEntry,
   removeEntryField,
   removeSection,
+  reorderEntries,
+  reorderSections,
   sectionCatalog,
   toggleSectionVisibility,
   updateContact,
   updateContactLink,
   updateEntryField,
   updateSectionTitle,
+  CUSTOM_SECTION_ID,
   type Contact,
   type ContactLink,
   type EntryField,
@@ -27,6 +33,7 @@ import {
 } from "@/lib/resume";
 import { persistMasterProfile, sendMasterProfileBeacon } from "./master-profile-api";
 import { useAutosave, type AutosaveStatus } from "./use-autosave";
+import { persistResumeDocument, sendResumeDocumentBeacon } from "@/app/documents/document-api";
 
 type EditableContactField = Exclude<keyof Contact, "links">;
 type RunsField = Extract<EntryField, { runs: TextRun[] }>;
@@ -480,8 +487,10 @@ function SectionEditor({
         </p>
       </div>
 
+      <SortableContext items={section.entries.map((entry) => `entry:${section.id}:${entry.id}`)} strategy={verticalListSortingStrategy}>
       <div className="flex flex-col gap-14">
         {section.entries.map((entry, entryIndex) => (
+          <SortableEntry entryId={`entry:${section.id}:${entry.id}`} key={entry.id}>
           <EntryEditor
             entry={entry}
             entryIndex={entryIndex}
@@ -493,8 +502,10 @@ function SectionEditor({
             onFieldRemove={(fieldIndex) => onFieldRemove(entry.id, fieldIndex)}
             onRemove={() => onEntryRemove(entry.id)}
           />
+          </SortableEntry>
         ))}
       </div>
+      </SortableContext>
 
       <button
         className="inline-flex w-fit items-center gap-7 rounded-buttons bg-forest-ink px-14 py-9 text-caption font-semibold text-cream-paper hover:bg-forest-shadow"
@@ -505,6 +516,24 @@ function SectionEditor({
         Add Entry
       </button>
     </section>
+  );
+}
+
+function SortableEntry({ entryId, children }: { entryId: string; children: ReactNode }) {
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({ id: entryId });
+  return (
+    <div ref={(node) => setNodeRef(node)} {...attributes} {...listeners} style={{ transform: CSS.Transform.toString(transform), transition }} className={isDragging ? "opacity-60" : undefined}>
+      {children}
+    </div>
+  );
+}
+
+function SortableSection({ sectionId, children }: { sectionId: string; children: ReactNode }) {
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({ id: `section:${sectionId}` });
+  return (
+    <div ref={(node) => setNodeRef(node)} {...attributes} {...listeners} style={{ transform: CSS.Transform.toString(transform), transition }} className={isDragging ? "opacity-60" : undefined}>
+      {children}
+    </div>
   );
 }
 
@@ -612,16 +641,33 @@ function statusLabel(status: AutosaveStatus): string {
   }
 }
 
-export function MasterProfileEditor({ initialResume }: { initialResume: Resume }) {
+export function MasterProfileEditor({
+  initialResume,
+  documentMode = false,
+  documentId,
+  documentName,
+}: {
+  initialResume: Resume;
+  documentMode?: boolean;
+  documentId?: string;
+  documentName?: string;
+}) {
   const [resume, setResume] = useState(initialResume);
   const [dirty, setDirty] = useState(false);
   const [newSectionCatalogId, setNewSectionCatalogId] = useState("");
+  const [newCustomSectionTitle, setNewCustomSectionTitle] = useState("");
   const [editorError, setEditorError] = useState<string | null>(null);
   const { status } = useAutosave({
     value: resume,
     dirty,
-    save: persistMasterProfile,
-    unloadSave: sendMasterProfileBeacon,
+    save: (value, signal) =>
+      documentMode && documentId
+        ? persistResumeDocument(documentId, value, signal)
+        : persistMasterProfile(value, signal),
+    unloadSave: (value) =>
+      documentMode && documentId
+        ? sendResumeDocumentBeacon(documentId, value)
+        : sendMasterProfileBeacon(value),
   });
 
   function updateResume(updater: (current: Resume) => Resume) {
@@ -637,20 +683,47 @@ export function MasterProfileEditor({ initialResume }: { initialResume: Resume }
   }
 
   function addNewSection() {
-    if (!newSectionCatalogId) return;
-    updateResume((current) => addSection(current, { catalogId: newSectionCatalogId }));
+    if (newSectionCatalogId === CUSTOM_SECTION_ID) {
+      if (!newCustomSectionTitle.trim()) return;
+      updateResume((current) => addSection(current, { catalogId: CUSTOM_SECTION_ID, title: newCustomSectionTitle }));
+      setNewCustomSectionTitle("");
+    } else if (newSectionCatalogId) {
+      updateResume((current) => addSection(current, { catalogId: newSectionCatalogId }));
+    } else return;
     setNewSectionCatalogId("");
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    if (!event.over || event.active.id === event.over.id) return;
+    const active = String(event.active.id);
+    const over = String(event.over.id);
+    if (active.startsWith("section:") && over.startsWith("section:")) {
+      const fromIndex = resume.sections.findIndex((section) => `section:${section.id}` === active);
+      const toIndex = resume.sections.findIndex((section) => `section:${section.id}` === over);
+      if (fromIndex >= 0 && toIndex >= 0) updateResume((current) => reorderSections(current, fromIndex, toIndex));
+      return;
+    }
+    if (active.startsWith("entry:") && over.startsWith("entry:")) {
+      const [, sectionId] = active.split(":");
+      const [, overSectionId] = over.split(":");
+      if (sectionId !== overSectionId) return;
+      const section = resume.sections.find((candidate) => candidate.id === sectionId);
+      if (!section) return;
+      const fromIndex = section.entries.findIndex((entry) => `entry:${sectionId}:${entry.id}` === active);
+      const toIndex = section.entries.findIndex((entry) => `entry:${sectionId}:${entry.id}` === over);
+      if (fromIndex >= 0 && toIndex >= 0) updateResume((current) => reorderEntries(current, sectionId, fromIndex, toIndex));
+    }
   }
 
   return (
     <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-14 pb-70 md:px-28">
       <div className="flex flex-col gap-14 py-35 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
-            Master Profile
+             <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
+             {documentMode ? "Resume Document" : "Master Profile"}
           </p>
           <h1 className="mt-9 font-faire-octave text-heading text-forest-ink">
-            Edit your baseline
+             {documentMode ? `Tailor ${documentName ?? "your document"}` : "Edit your baseline"}
           </h1>
           <p className="mt-14 max-w-2xl text-body leading-relaxed text-charcoal">
             Changes appear in the template preview immediately and save automatically after you pause.
@@ -703,6 +776,7 @@ export function MasterProfileEditor({ initialResume }: { initialResume: Resume }
                     onChange={(event) => setNewSectionCatalogId(event.target.value)}
                   >
                     <option value="">Choose a section...</option>
+                    {documentMode && <option value={CUSTOM_SECTION_ID}>Custom Section</option>}
                     {sectionCatalog.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.title}
@@ -710,6 +784,9 @@ export function MasterProfileEditor({ initialResume }: { initialResume: Resume }
                     ))}
                   </select>
                 </label>
+                {documentMode && newSectionCatalogId === CUSTOM_SECTION_ID && (
+                  <input aria-label="Custom section title" className="rounded-nav border border-border-mist bg-cream-paper px-11 py-9 text-body text-charcoal" placeholder="Custom section title" value={newCustomSectionTitle} onChange={(event) => setNewCustomSectionTitle(event.target.value)} />
+                )}
                 <button
                   className="inline-flex items-center gap-7 rounded-buttons bg-forest-ink px-14 py-9 text-caption font-semibold text-cream-paper hover:bg-forest-shadow disabled:opacity-50"
                   disabled={!newSectionCatalogId}
@@ -722,13 +799,16 @@ export function MasterProfileEditor({ initialResume }: { initialResume: Resume }
               </div>
             </div>
 
-            {resume.sections.length === 0 ? (
+             {resume.sections.length === 0 ? (
               <div className="rounded-cards bg-keylime-wash p-28 text-body text-charcoal">
                 Add a Section to start building your Master Profile.
               </div>
-            ) : (
-              resume.sections.map((section) => (
-                <SectionEditor
+             ) : (
+               <DndContext onDragEnd={handleDragEnd}>
+               <SortableContext items={resume.sections.map((section) => `section:${section.id}`)} strategy={verticalListSortingStrategy}>
+               {resume.sections.map((section) => (
+                 <SortableSection sectionId={section.id} key={section.id}>
+                 <SectionEditor
                   key={section.id}
                   section={section}
                   onTitleChange={(title) =>
@@ -756,14 +836,17 @@ export function MasterProfileEditor({ initialResume }: { initialResume: Resume }
                   onFieldAdd={(entryId, field) =>
                     updateResume((current) => addEntryField(current, section.id, entryId, field))
                   }
-                  onFieldRemove={(entryId, fieldIndex) =>
+                   onFieldRemove={(entryId, fieldIndex) =>
                     updateResume((current) =>
                       removeEntryField(current, section.id, entryId, fieldIndex),
                     )
-                  }
-                />
-              ))
-            )}
+                   }
+                  />
+                 </SortableSection>
+                ))}
+               </SortableContext>
+               </DndContext>
+             )}
           </div>
         </div>
 

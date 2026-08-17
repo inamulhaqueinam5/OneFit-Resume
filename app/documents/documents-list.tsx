@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Copy, FileText, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
 import type { ResumeDocumentMutation } from "@/lib/resume-documents";
 
 export type DocumentSummary = {
@@ -151,9 +152,9 @@ export function DocumentsList({
                   {formatUpdated(document.updatedAt)}
                 </span>
               </div>
-              <h2 className="font-faire-octave text-heading-sm text-forest-ink">
-                {document.name}
-              </h2>
+               <Link href={`/documents/${document.id}`} className="font-faire-octave text-heading-sm text-forest-ink hover:text-forest-shadow">
+                 {document.name}
+               </Link>
               <div className="flex items-center gap-9">
                 <button
                   aria-label={`Clone ${document.name}`}

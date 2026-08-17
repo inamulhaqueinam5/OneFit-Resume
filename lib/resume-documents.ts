@@ -1,6 +1,7 @@
 import { Prisma, type ResumeDocument } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { cloneDocument, createFromMaster } from "@/lib/resume/operations";
+import { deserializeResume } from "@/lib/resume/profile";
 import type { Resume } from "@/lib/resume/types";
 
 export type ResumeDocumentAction = "create" | "clone";
@@ -42,6 +43,28 @@ export async function listResumeDocuments(
     orderBy: { updatedAt: "desc" },
   });
   return records.map(toSummary);
+}
+
+export async function loadResumeDocument(
+  clerkUserId: string,
+  documentId: string,
+): Promise<{ name: string; resume: Resume } | null> {
+  const record = await prisma.resumeDocument.findUnique({ where: { id: documentId } });
+  if (!record || record.clerkUserId !== clerkUserId) return null;
+  return { name: record.name, resume: deserializeResume(record.resume) };
+}
+
+export async function saveResumeDocument(
+  clerkUserId: string,
+  documentId: string,
+  resume: Resume,
+): Promise<boolean> {
+  const validated = deserializeResume(resume);
+  const result = await prisma.resumeDocument.updateMany({
+    where: { id: documentId, clerkUserId },
+    data: { resume: validated as unknown as Prisma.InputJsonValue },
+  });
+  return result.count > 0;
 }
 
 export async function createResumeDocumentFromMaster(

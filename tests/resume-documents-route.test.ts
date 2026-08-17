@@ -7,6 +7,8 @@ const mocks = vi.hoisted(() => ({
   createResumeDocumentFromMaster: vi.fn(),
   cloneResumeDocument: vi.fn(),
   deleteResumeDocument: vi.fn(),
+  loadResumeDocument: vi.fn(),
+  saveResumeDocument: vi.fn(),
 }));
 
 vi.mock("@clerk/nextjs/server", () => ({ auth: mocks.auth }));
@@ -16,9 +18,11 @@ vi.mock("@/lib/resume-documents", () => ({
   createResumeDocumentFromMaster: mocks.createResumeDocumentFromMaster,
   cloneResumeDocument: mocks.cloneResumeDocument,
   deleteResumeDocument: mocks.deleteResumeDocument,
+  loadResumeDocument: mocks.loadResumeDocument,
+  saveResumeDocument: mocks.saveResumeDocument,
 }));
 
-import { DELETE, GET, POST } from "@/app/api/resume-documents/route";
+import { DELETE, GET, POST, PUT } from "@/app/api/resume-documents/route";
 
 const createdAt = new Date("2026-01-01T00:00:00Z");
 const updatedAt = new Date("2026-01-02T00:00:00Z");
@@ -60,6 +64,8 @@ describe("Resume Documents route", () => {
     mocks.createResumeDocumentFromMaster.mockReset();
     mocks.cloneResumeDocument.mockReset();
     mocks.deleteResumeDocument.mockReset();
+    mocks.loadResumeDocument.mockReset();
+    mocks.saveResumeDocument.mockReset();
     mocks.auth.mockResolvedValue({ userId: "user-1" });
   });
 
@@ -67,7 +73,7 @@ describe("Resume Documents route", () => {
     it("requires an authenticated user", async () => {
       mocks.auth.mockResolvedValue({ userId: null });
 
-      const response = await GET();
+      const response = await GET(new Request("http://localhost/api/resume-documents"));
 
       expect(response.status).toBe(401);
       expect(mocks.listResumeDocuments).not.toHaveBeenCalled();
@@ -76,11 +82,34 @@ describe("Resume Documents route", () => {
     it("returns the authenticated user's Resume Documents", async () => {
       mocks.listResumeDocuments.mockResolvedValue([summary]);
 
-      const response = await GET();
+      const response = await GET(new Request("http://localhost/api/resume-documents"));
 
       expect(response.status).toBe(200);
       expect(await response.json()).toEqual({ documents: [serializedSummary] });
       expect(mocks.listResumeDocuments).toHaveBeenCalledWith("user-1");
+    });
+  });
+
+  describe("GET document", () => {
+    it("returns an owned document by id", async () => {
+      mocks.loadResumeDocument.mockResolvedValue({ name: "Product Designer", resume: master });
+      const response = await GET(new Request("http://localhost/api/resume-documents?id=doc-1"));
+      expect(response.status).toBe(200);
+      expect(await response.json()).toEqual({ document: { name: "Product Designer", resume: master } });
+      expect(mocks.loadResumeDocument).toHaveBeenCalledWith("user-1", "doc-1");
+    });
+  });
+
+  describe("PUT", () => {
+    it("saves an edited document for its owner", async () => {
+      mocks.saveResumeDocument.mockResolvedValue(true);
+      const response = await PUT(new Request("http://localhost/api/resume-documents?id=doc-1", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resume: master }),
+      }));
+      expect(response.status).toBe(204);
+      expect(mocks.saveResumeDocument).toHaveBeenCalledWith("user-1", "doc-1", master);
     });
   });
 

@@ -67,4 +67,30 @@ describe("MasterProfileEditor", () => {
     fireEvent.click(screen.getByRole("button", { name: "Remove contact link 1" }));
     expect(screen.queryByLabelText("Contact link 1 label")).not.toBeInTheDocument();
   });
+
+  it("supports document-only custom sections and preserves hidden section data", () => {
+    render(
+      <MasterProfileEditor
+        documentId="doc-1"
+        documentMode
+        documentName="Product Designer"
+        initialResume={resume}
+      />,
+    );
+
+    fireEvent.click(screen.getByLabelText("Show Experience section"));
+    expect(screen.getByLabelText("Show Experience section")).not.toBeChecked();
+    expect(screen.getByLabelText("Experience entry 1 Title text run 1 text")).toHaveValue("Engineer");
+
+    fireEvent.change(screen.getByLabelText("New section type"), {
+      target: { value: "custom" },
+    });
+    fireEvent.change(screen.getByLabelText("Custom section title"), {
+      target: { value: "Awards" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Add" }));
+
+    expect(screen.getByDisplayValue("Awards")).toBeInTheDocument();
+    expect(screen.getByText("1 Entry")).toBeInTheDocument();
+  });
 });

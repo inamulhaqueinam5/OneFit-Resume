@@ -5,8 +5,11 @@ import {
   createResumeDocumentFromMaster,
   deleteResumeDocument,
   listResumeDocuments,
+  loadResumeDocument,
+  saveResumeDocument,
   type ResumeDocumentAction,
 } from "@/lib/resume-documents";
+import type { Resume } from "@/lib/resume";
 
 export const dynamic = "force-dynamic";
 
@@ -14,14 +17,41 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const { userId } = await auth();
   if (!userId) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  const id = new URL(request.url).searchParams.get("id");
+  if (id) {
+    const document = await loadResumeDocument(userId, id);
+    if (!document) return new Response("Resume Document not found", { status: 404 });
+    return Response.json({ document });
+  }
+
   const documents = await listResumeDocuments(userId);
   return Response.json({ documents });
+}
+
+export async function PUT(request: Request) {
+  const { userId } = await auth();
+  if (!userId) return new Response("Unauthorized", { status: 401 });
+
+  const id = new URL(request.url).searchParams.get("id");
+  if (!id) return new Response("Missing Resume Document id", { status: 400 });
+
+  try {
+    const payload: unknown = await request.json();
+    if (!isRecord(payload) || !isRecord(payload.resume)) {
+      return new Response("Invalid Resume Document request", { status: 400 });
+    }
+    const saved = await saveResumeDocument(userId, id, payload.resume as Resume);
+    if (!saved) return new Response("Resume Document not found", { status: 404 });
+    return new Response(null, { status: 204 });
+  } catch {
+    return new Response("Invalid Resume Document request", { status: 400 });
+  }
 }
 
 export async function POST(request: Request) {
