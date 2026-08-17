@@ -2,6 +2,14 @@ import { v2 as cloudinary } from "cloudinary";
 
 const PROFILE_PICTURE_FOLDER = "onefit/profile-pictures";
 
+if (typeof cloudinary.config === "function") {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+}
+
 export type UploadedProfilePicture = {
   dataUrl: string;
   publicId: string;
