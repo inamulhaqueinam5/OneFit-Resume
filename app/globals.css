@@ -33,6 +33,10 @@ body {
     padding: 0;
   }
 
+  body:has(.resume-print-target) main {
+    padding: 0;
+  }
+
   body:has(.resume-print-target) .resume-preview-panel {
     display: block;
     padding: 0;
