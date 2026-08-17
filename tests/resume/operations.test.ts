@@ -12,7 +12,7 @@ import {
   setCompressionLevel,
   toggleSectionVisibility,
 } from "@/lib/resume/operations";
-import { CUSTOM_SECTION_ID } from "@/lib/resume/types";
+import { CUSTOM_SECTION_ID, MAX_COMPRESSION_LEVEL, MIN_COMPRESSION_LEVEL } from "@/lib/resume/types";
 
 function sampleResume() {
   let resume = createEmptyResume();
@@ -149,7 +149,13 @@ describe("setCompressionLevel", () => {
     const resume = createEmptyResume();
     expect(setCompressionLevel(resume, 64).compressionLevel).toBe(60);
     expect(setCompressionLevel(resume, 66).compressionLevel).toBe(70);
-    expect(setCompressionLevel(resume, 120).compressionLevel).toBe(100);
-    expect(setCompressionLevel(resume, -10).compressionLevel).toBe(0);
+    expect(setCompressionLevel(resume, 120).compressionLevel).toBe(MAX_COMPRESSION_LEVEL);
+    expect(setCompressionLevel(resume, -10).compressionLevel).toBe(MIN_COMPRESSION_LEVEL);
+  });
+
+  it("clamps to the compression bounds", () => {
+    const resume = createEmptyResume();
+    expect(setCompressionLevel(resume, 1000).compressionLevel).toBe(MAX_COMPRESSION_LEVEL);
+    expect(setCompressionLevel(resume, -1000).compressionLevel).toBe(MIN_COMPRESSION_LEVEL);
   });
 });

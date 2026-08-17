@@ -4,6 +4,7 @@ import {
   CUSTOM_SECTION_ID,
   COMPRESSION_STEP,
   MAX_COMPRESSION_LEVEL,
+  MIN_COMPRESSION_LEVEL,
   type Contact,
   type ContactLink,
   type Entry,
@@ -284,7 +285,7 @@ export function reorderEntries(
 }
 
 export function setCompressionLevel(resume: Resume, level: number): Resume {
-  const clamped = Math.min(MAX_COMPRESSION_LEVEL, Math.max(0, level));
+  const clamped = Math.min(MAX_COMPRESSION_LEVEL, Math.max(MIN_COMPRESSION_LEVEL, level));
   const snapped = Math.round(clamped / COMPRESSION_STEP) * COMPRESSION_STEP;
   return { ...resume, compressionLevel: snapped };
 }

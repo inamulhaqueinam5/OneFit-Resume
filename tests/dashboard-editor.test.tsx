@@ -115,11 +115,11 @@ describe("MasterProfileEditor", () => {
 
     expect(screen.getByLabelText("Compression level")).toHaveTextContent("100%");
 
-    fireEvent.click(screen.getByRole("button", { name: "Decrease compression" }));
+    fireEvent.click(screen.getByRole("button", { name: "Compress" }));
     expect(screen.getByLabelText("Compression level")).toHaveTextContent("90%");
     expect(screen.getByRole("document")).toHaveAttribute("data-compression-level", "90");
 
-    fireEvent.click(screen.getByRole("button", { name: "Increase compression" }));
+    fireEvent.click(screen.getByRole("button", { name: "Expand" }));
     expect(screen.getByLabelText("Compression level")).toHaveTextContent("100%");
   });
 
@@ -127,6 +127,6 @@ describe("MasterProfileEditor", () => {
     render(<MasterProfileEditor initialResume={resume} />);
 
     expect(screen.queryByLabelText("Compression level")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Decrease compression" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Compress" })).not.toBeInTheDocument();
   });
 });

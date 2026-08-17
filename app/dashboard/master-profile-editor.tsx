@@ -27,6 +27,7 @@ import {
   COMPRESSION_STEP,
   CUSTOM_SECTION_ID,
   MAX_COMPRESSION_LEVEL,
+  MIN_COMPRESSION_LEVEL,
   type Contact,
   type ContactLink,
   type EntryField,
@@ -885,9 +886,9 @@ export function MasterProfileEditor({
                 </div>
                 <div className="flex items-center gap-9">
                   <button
-                    aria-label="Decrease compression"
+                    aria-label="Compress"
                     className={compressionButtonClass}
-                    disabled={resume.compressionLevel <= 0}
+                    disabled={resume.compressionLevel <= MIN_COMPRESSION_LEVEL}
                     type="button"
                     onClick={() => changeCompression(-COMPRESSION_STEP)}
                   >
@@ -900,7 +901,7 @@ export function MasterProfileEditor({
                     {resume.compressionLevel}%
                   </span>
                   <button
-                    aria-label="Increase compression"
+                    aria-label="Expand"
                     className={compressionButtonClass}
                     disabled={resume.compressionLevel >= MAX_COMPRESSION_LEVEL}
                     type="button"
