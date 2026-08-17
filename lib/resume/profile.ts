@@ -1,4 +1,4 @@
-import type { ParseResult, Resume } from "./types";
+import { CUSTOM_SECTION_ID, type ParseResult, type Resume } from "./types";
 
 export type ImportAssessment = {
   isOfficialTemplate: boolean;
@@ -127,4 +127,12 @@ export function deserializeResume(value: unknown): Resume {
   }
 
   return value as unknown as Resume;
+}
+
+export function deserializeMasterProfile(value: unknown): Resume {
+  const resume = deserializeResume(value);
+  if (resume.sections.some((section) => section.catalogId === CUSTOM_SECTION_ID)) {
+    throw new Error("Invalid Master Profile: Custom Sections belong to Resume Documents");
+  }
+  return resume;
 }

@@ -5,6 +5,7 @@ import {
   COMPRESSION_STEP,
   MAX_COMPRESSION_LEVEL,
   type Contact,
+  type ContactLink,
   type Entry,
   type EntryField,
   type Resume,
@@ -42,6 +43,52 @@ export function createEmptyResume(): Resume {
   };
 }
 
+type EditableContact = Omit<Contact, "links">;
+
+export function updateContact(resume: Resume, patch: Partial<EditableContact>): Resume {
+  return {
+    ...resume,
+    contact: { ...resume.contact, ...patch },
+  };
+}
+
+export function addContactLink(resume: Resume, link: ContactLink, position?: number): Resume {
+  const links = [...resume.contact.links];
+  const index =
+    position === undefined ? links.length : Math.max(0, Math.min(links.length, position));
+  links.splice(index, 0, clone(link));
+  return {
+    ...resume,
+    contact: { ...resume.contact, links },
+  };
+}
+
+export function updateContactLink(
+  resume: Resume,
+  index: number,
+  link: ContactLink,
+): Resume {
+  return {
+    ...resume,
+    contact: {
+      ...resume.contact,
+      links: resume.contact.links.map((current, currentIndex) =>
+        currentIndex === index ? clone(link) : current,
+      ),
+    },
+  };
+}
+
+export function removeContactLink(resume: Resume, index: number): Resume {
+  return {
+    ...resume,
+    contact: {
+      ...resume.contact,
+      links: resume.contact.links.filter((_, currentIndex) => currentIndex !== index),
+    },
+  };
+}
+
 export function createFromMaster(master: Resume): Resume {
   return {
     ...clone(master),
@@ -64,6 +111,15 @@ export function toggleSectionVisibility(resume: Resume, sectionId: string): Resu
       section.id === sectionId
         ? { ...section, visible: !section.visible }
         : section,
+    ),
+  };
+}
+
+export function updateSectionTitle(resume: Resume, sectionId: string, title: string): Resume {
+  return {
+    ...resume,
+    sections: resume.sections.map((section) =>
+      section.id === sectionId ? { ...section, title } : section,
     ),
   };
 }
@@ -136,14 +192,70 @@ export function addEntry(
 }
 
 export function removeEntry(resume: Resume, sectionId: string, entryId: string): Resume {
+  return updateEntry(resume, sectionId, entryId, () => null);
+}
+
+function updateEntry(
+  resume: Resume,
+  sectionId: string,
+  entryId: string,
+  updater: (entry: Entry) => Entry | null,
+): Resume {
   return {
     ...resume,
-    sections: resume.sections.map((section) =>
-      section.id === sectionId
-        ? { ...section, entries: section.entries.filter((entry) => entry.id !== entryId) }
-        : section,
-    ),
+    sections: resume.sections.map((section) => {
+      if (section.id !== sectionId) return section;
+      return {
+        ...section,
+        entries: section.entries
+          .map((entry) => (entry.id === entryId ? updater(entry) : entry))
+          .filter((entry): entry is Entry => entry !== null),
+      };
+    }),
   };
+}
+
+export function updateEntryField(
+  resume: Resume,
+  sectionId: string,
+  entryId: string,
+  fieldIndex: number,
+  field: EntryField,
+): Resume {
+  return updateEntry(resume, sectionId, entryId, (entry) => ({
+    ...entry,
+    fields: entry.fields.map((current, currentIndex) =>
+      currentIndex === fieldIndex ? clone(field) : current,
+    ),
+  }));
+}
+
+export function addEntryField(
+  resume: Resume,
+  sectionId: string,
+  entryId: string,
+  field: EntryField,
+  position?: number,
+): Resume {
+  return updateEntry(resume, sectionId, entryId, (entry) => {
+    const fields = [...entry.fields];
+    const index =
+      position === undefined ? fields.length : Math.max(0, Math.min(fields.length, position));
+    fields.splice(index, 0, clone(field));
+    return { ...entry, fields };
+  });
+}
+
+export function removeEntryField(
+  resume: Resume,
+  sectionId: string,
+  entryId: string,
+  fieldIndex: number,
+): Resume {
+  return updateEntry(resume, sectionId, entryId, (entry) => ({
+    ...entry,
+    fields: entry.fields.filter((_, index) => index !== fieldIndex),
+  }));
 }
 
 export function reorderSections(resume: Resume, fromIndex: number, toIndex: number): Resume {
