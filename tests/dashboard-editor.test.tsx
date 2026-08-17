@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MasterProfileEditor } from "@/app/dashboard/master-profile-editor";
 import type { Resume } from "@/lib/resume";
 import { describe, expect, it, vi } from "vitest";
@@ -62,6 +62,31 @@ describe("MasterProfileEditor", () => {
 
     expect(screen.getByRole("heading", { name: "Grace Hopper" })).toBeInTheDocument();
     expect(screen.getByText("Staff Engineer")).toBeInTheDocument();
+  });
+
+  it("uploads and previews a Profile Picture", async () => {
+    vi.spyOn(global, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          profilePicture: {
+            dataUrl: "https://res.cloudinary.com/demo/image/upload/photo.jpg",
+            publicId: "onefit/profile-pictures/photo",
+          },
+        }),
+        { status: 200 },
+      ),
+    );
+    render(<MasterProfileEditor initialResume={resume} />);
+
+    fireEvent.change(screen.getByLabelText("Profile Picture"), {
+      target: { files: [new File(["photo"], "photo.jpg", { type: "image/jpeg" })] },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByAltText("Ada Lovelace Profile Picture preview")).toBeInTheDocument(),
+    );
+    expect(screen.getByText("Replace Profile Picture")).toBeInTheDocument();
+    vi.restoreAllMocks();
   });
 
   it("adds and removes Contact links", () => {

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Minus, Plus, Printer, Trash2 } from "lucide-react";
+import Image from "next/image";
+import { ImageUp, Minus, Plus, Printer, Trash2 } from "lucide-react";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -33,6 +34,7 @@ import {
   type EntryField,
   type EntryFieldKind,
   type Resume,
+  type ProfilePicture,
   type TextRun,
 } from "@/lib/resume";
 import { persistMasterProfile, sendMasterProfileBeacon } from "./master-profile-api";
@@ -697,6 +699,20 @@ export function MasterProfileEditor({
     );
   }
 
+  async function uploadPicture(file: File) {
+    setEditorError(null);
+    const body = new FormData();
+    body.append("file", file);
+    try {
+      const response = await fetch("/api/profile-picture", { method: "POST", body });
+      if (!response.ok) throw new Error("Profile Picture upload failed");
+      const payload = (await response.json()) as { profilePicture: ProfilePicture };
+      updateResume((current) => ({ ...current, profilePicture: payload.profilePicture }));
+    } catch {
+      setEditorError("Your Profile Picture could not be uploaded.");
+    }
+  }
+
   function addNewSection() {
     if (newSectionCatalogId === CUSTOM_SECTION_ID) {
       if (!newCustomSectionTitle.trim()) return;
@@ -767,7 +783,7 @@ export function MasterProfileEditor({
 
       <div className="resume-editor-grid grid items-start gap-28 lg:grid-cols-[minmax(0,1fr)_minmax(390px,0.9fr)]">
          <div className="flex min-w-0 flex-col gap-21 print:hidden">
-          <ContactEditor
+           <ContactEditor
             contact={resume.contact}
             onChange={changeContact}
             onLinkAdd={() =>
@@ -779,9 +795,42 @@ export function MasterProfileEditor({
             onLinkRemove={(index) =>
               updateResume((current) => removeContactLink(current, index))
             }
-          />
+           />
 
-          <div className="flex flex-col gap-21">
+           <section className="flex flex-col gap-14 rounded-cards bg-slate-hush p-28">
+             <div>
+               <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">Profile Picture</p>
+               <p className="mt-7 text-caption text-charcoal">Upload a square original. The resume preview masks it into a circle.</p>
+             </div>
+             <div className="flex flex-wrap items-center gap-14">
+               {resume.profilePicture && (
+                 <Image
+                   className="h-70 w-70 rounded-full object-cover"
+                   src={resume.profilePicture.dataUrl}
+                   alt={`${resume.contact.name || "Resume"} Profile Picture preview`}
+                   width={70}
+                   height={70}
+                   unoptimized
+                 />
+               )}
+               <label className="inline-flex cursor-pointer items-center gap-7 rounded-buttons bg-forest-ink px-14 py-9 text-caption font-semibold text-cream-paper hover:bg-forest-shadow">
+                 <ImageUp className="h-3.5 w-3.5" aria-hidden="true" />
+                 {resume.profilePicture ? "Replace Profile Picture" : "Upload Profile Picture"}
+                 <input
+                   aria-label="Profile Picture"
+                   className="sr-only"
+                   type="file"
+                   accept="image/*"
+                   onChange={(event) => {
+                     const file = event.target.files?.[0];
+                     if (file) void uploadPicture(file);
+                   }}
+                 />
+               </label>
+             </div>
+           </section>
+
+           <div className="flex flex-col gap-21">
             <div className="flex flex-wrap items-end justify-between gap-14">
               <div>
                 <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">

@@ -104,7 +104,7 @@ function isContact(value: unknown): boolean {
 function isProfilePicture(value: unknown): boolean {
   if (value === null) return true;
   if (!isRecord(value)) return false;
-  return isString(value.dataUrl);
+  return isString(value.dataUrl) && (value.publicId === undefined || isString(value.publicId));
 }
 
 export function deserializeResume(value: unknown): Resume {

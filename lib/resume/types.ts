@@ -46,6 +46,7 @@ export type Contact = {
 
 export type ProfilePicture = {
   dataUrl: string;
+  publicId?: string;
 };
 
 export type SectionCatalogItem = {
