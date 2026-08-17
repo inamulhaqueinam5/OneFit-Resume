@@ -14,3 +14,14 @@ model MasterProfile {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
+
+model ResumeDocument {
+  id           String   @id @default(uuid())
+  clerkUserId  String
+  name         String
+  resume       Json
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([clerkUserId])
+}
