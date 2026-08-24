@@ -34,6 +34,7 @@ describe("DocumentsList", () => {
 
     expect(screen.getByText("Product Designer")).toBeInTheDocument();
     expect(screen.getByText("Staff Engineer")).toBeInTheDocument();
+    expect(screen.getByText("Created Jan 1, 2026")).toBeInTheDocument();
   });
 
   it("creates a Resume Document from the Master Profile", async () => {
