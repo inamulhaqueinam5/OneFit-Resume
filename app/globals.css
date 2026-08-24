@@ -92,29 +92,29 @@ body {
 
 @media print {
   /* Keep the resume in normal flow so browser pagination can produce multiple pages. */
-  body:has(.resume-print-target) .resume-print-target {
+  body:has(.master-profile-editor .resume-print-target) .master-profile-editor .resume-print-target {
     width: 100%;
     max-height: none;
     overflow: visible;
     background: #fff;
   }
 
-  body:has(.resume-print-target) .resume-editor-grid {
+  body:has(.master-profile-editor .resume-print-target) .master-profile-editor .resume-editor-grid {
     display: block;
     padding: 0;
   }
 
-  body:has(.resume-print-target) main {
+  body:has(.master-profile-editor .resume-print-target) .master-profile-editor {
     padding: 0;
   }
 
-  body:has(.resume-print-target) .resume-preview-panel {
+  body:has(.master-profile-editor .resume-print-target) .master-profile-editor .resume-preview-panel {
     display: block;
     padding: 0;
     background: #fff;
   }
 
-  body:has(.resume-print-target) #resume-preview-pane {
+  body:has(.master-profile-editor .resume-print-target) .master-profile-editor #resume-preview-pane {
     display: block !important;
   }
 }
