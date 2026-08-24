@@ -165,4 +165,26 @@ describe("MasterProfileEditor", () => {
     expect(screen.queryByLabelText("Compression level")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Compress" })).not.toBeInTheDocument();
   });
+
+  it("provides an accessible mobile Edit and Preview switcher", () => {
+    render(<MasterProfileEditor initialResume={resume} />);
+
+    const editView = screen.getByRole("tab", { name: "Edit" });
+    const previewView = screen.getByRole("tab", { name: "Preview" });
+
+    expect(editView).toHaveAttribute("aria-selected", "true");
+    expect(previewView).toHaveAttribute("aria-selected", "false");
+
+    fireEvent.click(previewView);
+
+    expect(previewView).toHaveAttribute("aria-selected", "true");
+    expect(editView).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByRole("tabpanel", { name: "Preview" })).toHaveClass("block");
+    expect(screen.getByRole("tabpanel", { name: "Edit" })).toHaveClass("hidden");
+
+    fireEvent.click(editView);
+
+    expect(screen.getByRole("tabpanel", { name: "Edit" })).toHaveClass("block");
+    expect(screen.getByRole("tabpanel", { name: "Preview" })).toHaveClass("hidden");
+  });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import Image from "next/image";
 import { ImageUp, Minus, Plus, Printer, Trash2 } from "lucide-react";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
@@ -40,12 +40,16 @@ import {
 import { persistMasterProfile, sendMasterProfileBeacon } from "./master-profile-api";
 import { useAutosave, type AutosaveStatus } from "./use-autosave";
 import { persistResumeDocument, sendResumeDocumentBeacon } from "@/app/documents/document-api";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Status, type StatusTone } from "@/components/ui/status";
 
 type EditableContactField = Exclude<keyof Contact, "links">;
 type RunsField = Extract<EntryField, { runs: TextRun[] }>;
 
 const compressionButtonClass =
-  "inline-flex h-35 w-35 items-center justify-center rounded-nav border border-border-mist bg-cream-paper text-forest-ink hover:text-forest-shadow disabled:opacity-50";
+  "inline-flex h-11 min-h-[44px] w-11 min-w-[44px] items-center justify-center border border-rule bg-paper-raised text-ink hover:bg-ink hover:text-newsprint disabled:opacity-50";
 
 const contactFields: Array<{
   key: EditableContactField;
@@ -570,18 +574,18 @@ function ContactEditor({
         </h2>
       </div>
       <div className="grid gap-14 md:grid-cols-2">
-        {contactFields.map(({ key, label, multiline, type }) => (
-          <label className="flex flex-col gap-7 text-caption font-semibold text-forest-ink" key={key}>
-            {label}
-            {multiline ? (
+         {contactFields.map(({ key, label, multiline, type }) => (
+           <Label className="flex flex-col gap-7 text-caption font-semibold text-ink" key={key}>
+             {label}
+             {multiline ? (
               <textarea
                 aria-label={label}
                 className="min-h-70 resize-y rounded-nav border border-border-mist bg-cream-paper px-11 py-9 text-body font-normal text-charcoal outline-none focus:border-forest-ink"
                 value={contact[key]}
                 onChange={(event) => onChange(key, event.target.value)}
               />
-            ) : (
-              <input
+             ) : (
+               <Input
                 aria-label={label}
                 className="rounded-nav border border-border-mist bg-cream-paper px-11 py-9 text-body font-normal text-charcoal outline-none focus:border-forest-ink"
                 type={type ?? "text"}
@@ -589,20 +593,16 @@ function ContactEditor({
                 onChange={(event) => onChange(key, event.target.value)}
               />
             )}
-          </label>
-        ))}
+           </Label>
+         ))}
       </div>
       <div className="flex flex-col gap-14">
         <div className="flex items-center justify-between gap-14">
           <p className="text-caption font-semibold text-forest-ink">Links</p>
-          <button
-            className="inline-flex items-center gap-7 text-caption font-semibold text-forest-ink hover:text-forest-shadow"
-            type="button"
-            onClick={onLinkAdd}
-          >
-            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-            Add contact link
-          </button>
+             <Button variant="link" size="sm" type="button" onClick={onLinkAdd}>
+               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+               Add contact link
+             </Button>
         </div>
         {contact.links.map((link, index) => (
           <div className="grid gap-9 md:grid-cols-[1fr_1.4fr_auto]" key={index}>
@@ -635,20 +635,13 @@ function ContactEditor({
   );
 }
 
-function statusLabel(status: AutosaveStatus): string {
-  switch (status) {
-    case "pending":
-      return "Changes will save in 2 seconds";
-    case "saving":
-      return "Saving...";
-    case "saved":
-      return "Saved";
-    case "error":
-      return "Save failed; keep editing to retry";
-    default:
-      return "All changes saved";
-  }
-}
+const autosaveStatusCopy: Record<AutosaveStatus, { label: string; tone: StatusTone }> = {
+  idle: { label: "All changes saved", tone: "neutral" },
+  pending: { label: "Changes will save in 2 seconds", tone: "pending" },
+  saving: { label: "Saving...", tone: "pending" },
+  saved: { label: "Saved", tone: "success" },
+  error: { label: "Save failed; keep editing to retry", tone: "error" },
+};
 
 export function MasterProfileEditor({
   initialResume,
@@ -666,6 +659,9 @@ export function MasterProfileEditor({
   const [newSectionCatalogId, setNewSectionCatalogId] = useState("");
   const [newCustomSectionTitle, setNewCustomSectionTitle] = useState("");
   const [editorError, setEditorError] = useState<string | null>(null);
+  const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
+  const editTabRef = useRef<HTMLButtonElement>(null);
+  const previewTabRef = useRef<HTMLButtonElement>(null);
   const { status } = useAutosave({
     value: resume,
     dirty,
@@ -746,8 +742,16 @@ export function MasterProfileEditor({
     }
   }
 
+  function handleMobileTabKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const nextView = event.key === "ArrowLeft" ? "edit" : "preview";
+    setMobileView(nextView);
+    (nextView === "edit" ? editTabRef : previewTabRef).current?.focus();
+  }
+
   return (
-    <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-14 pb-70 md:px-28">
+    <main className="master-profile-editor mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-14 pb-70 md:px-28">
        <div className="flex flex-col gap-14 py-35 md:flex-row md:items-end md:justify-between print:hidden">
         <div>
              <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
@@ -760,29 +764,54 @@ export function MasterProfileEditor({
             Changes appear in the template preview immediately and save automatically after you pause.
           </p>
         </div>
-         <div className="flex items-center gap-11">
-           <button
-             className="inline-flex items-center gap-7 rounded-nav border border-border-mist bg-cream-paper px-11 py-9 text-caption text-forest-ink hover:text-forest-shadow"
-             type="button"
-             onClick={printResume}
-           >
-             <Printer className="h-3.5 w-3.5" aria-hidden="true" />
-             Print resume
-           </button>
-           <p className="rounded-badges bg-keylime-wash px-14 py-9 text-caption text-forest-ink" role="status">
-             {statusLabel(status)}
-           </p>
-         </div>
-      </div>
+           <div className="flex flex-wrap items-center gap-11">
+            <Button variant="outline" size="sm" type="button" onClick={printResume}>
+              <Printer className="h-3.5 w-3.5" aria-hidden="true" />
+              Print resume
+            </Button>
+            <Status tone={autosaveStatusCopy[status].tone}>{autosaveStatusCopy[status].label}</Status>
+          </div>
+       </div>
 
-      {editorError && (
-        <p className="mb-21 rounded-cards bg-slate-hush p-18 text-body text-charcoal print:hidden" role="alert">
+       {editorError && (
+         <p className="mb-21 border-l-2 border-editorial bg-paper-sunken p-18 text-body text-ink-muted print:hidden" role="alert">
           {editorError}
         </p>
       )}
 
-      <div className="resume-editor-grid grid items-start gap-28 lg:grid-cols-[minmax(0,1fr)_minmax(390px,0.9fr)]">
-         <div className="flex min-w-0 flex-col gap-21 print:hidden">
+       <div className="mb-21 flex border-y border-rule lg:hidden print:hidden" role="tablist" aria-label="Resume workspace view">
+         <button
+           className="min-h-[44px] flex-1 border-r border-rule px-14 py-11 text-caption font-semibold uppercase tracking-[0.08em] text-ink-muted aria-selected:border-b-2 aria-selected:border-editorial aria-selected:text-ink"
+           type="button"
+           role="tab"
+           id="edit-resume-tab"
+           ref={editTabRef}
+           aria-selected={mobileView === "edit"}
+           aria-controls="resume-editor-pane"
+           tabIndex={mobileView === "edit" ? 0 : -1}
+           onKeyDown={handleMobileTabKeyDown}
+           onClick={() => setMobileView("edit")}
+         >
+           Edit
+         </button>
+         <button
+           className="min-h-[44px] flex-1 px-14 py-11 text-caption font-semibold uppercase tracking-[0.08em] text-ink-muted aria-selected:border-b-2 aria-selected:border-editorial aria-selected:text-ink"
+           type="button"
+           role="tab"
+           id="preview-resume-tab"
+           ref={previewTabRef}
+           aria-selected={mobileView === "preview"}
+           aria-controls="resume-preview-pane"
+           tabIndex={mobileView === "preview" ? 0 : -1}
+           onKeyDown={handleMobileTabKeyDown}
+           onClick={() => setMobileView("preview")}
+         >
+           Preview
+         </button>
+       </div>
+
+       <div className="resume-editor-grid grid items-start gap-28 lg:grid-cols-[minmax(0,1fr)_minmax(390px,0.9fr)]">
+          <div id="resume-editor-pane" role="tabpanel" aria-labelledby="edit-resume-tab" aria-label="Edit resume" className={`${mobileView === "edit" ? "block" : "hidden"} min-w-0 flex-col gap-21 lg:flex print:hidden`}>
            <ContactEditor
             contact={resume.contact}
             onChange={changeContact}
@@ -813,7 +842,7 @@ export function MasterProfileEditor({
                    unoptimized
                  />
                )}
-               <label className="inline-flex cursor-pointer items-center gap-7 rounded-buttons bg-forest-ink px-14 py-9 text-caption font-semibold text-cream-paper hover:bg-forest-shadow">
+                <label className="inline-flex min-h-[44px] cursor-pointer items-center gap-7 rounded-buttons bg-forest-ink px-14 py-9 text-caption font-semibold text-cream-paper hover:bg-forest-shadow">
                  <ImageUp className="h-3.5 w-3.5" aria-hidden="true" />
                  {resume.profilePicture ? "Replace Profile Picture" : "Upload Profile Picture"}
                  <input
@@ -924,7 +953,7 @@ export function MasterProfileEditor({
           </div>
         </div>
 
-        <aside className="min-w-0 lg:sticky lg:top-21">
+         <aside id="resume-preview-pane" role="tabpanel" aria-labelledby="preview-resume-tab" aria-label="Resume preview" className={`${mobileView === "preview" ? "block" : "hidden"} min-w-0 lg:block lg:sticky lg:top-21`}>
            <div className="resume-preview-panel flex flex-col gap-14 rounded-cards bg-slate-hush p-14 md:p-21">
              <div className="flex items-center justify-between gap-14 px-7 print:hidden">
               <div>
