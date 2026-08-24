@@ -70,6 +70,20 @@ body {
   min-height: var(--touch-min);
 }
 
+.master-profile-editor select,
+.master-profile-editor textarea,
+.master-profile-editor input:not([type="checkbox"]):not([type="file"]) {
+  max-width: 100%;
+}
+
+.master-profile-editor input:focus-visible,
+.master-profile-editor select:focus-visible,
+.master-profile-editor textarea:focus-visible,
+.master-profile-editor button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
 .master-profile-editor button:not(:disabled):hover {
   transition: background-color var(--duration-fast) var(--ease-newsprint),
     color var(--duration-fast) var(--ease-newsprint),

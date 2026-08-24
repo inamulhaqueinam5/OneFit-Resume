@@ -63,6 +63,8 @@ describe("Newsprint UI primitives", () => {
 
   it("Status announces messages with status role", () => {
     render(<Status tone="error">Save failed. Try again.</Status>);
-    expect(screen.getByRole("status")).toHaveTextContent("Save failed. Try again.");
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent("Save failed. Try again.");
+    expect(status).toHaveAttribute("aria-live", "polite");
   });
 });

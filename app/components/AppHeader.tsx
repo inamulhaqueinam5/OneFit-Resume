@@ -19,7 +19,7 @@ export function AppHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="border-b border-rule bg-newsprint print:hidden">
+    <header className="relative border-b border-rule bg-newsprint print:hidden">
       <div className="mx-auto flex w-full max-w-[var(--page-max-width)] items-center justify-between gap-4 px-4 py-3 md:px-7">
         <Link
           href="/dashboard"
@@ -41,6 +41,7 @@ export function AppHeader() {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
                   "inline-flex min-h-[44px] items-center border border-transparent px-3 py-2 font-[family-name:var(--font-ui)] text-body text-ink transition-colors hover:border-ink focus-visible:outline focus-visible:outline-[length:var(--focus-ring-width)] focus-visible:outline-offset-[var(--focus-ring-offset)] focus-visible:outline-[var(--focus-ring-color)]",
                   active && "border-ink bg-paper-sunken",
@@ -86,20 +87,29 @@ export function AppHeader() {
         <nav
           id="app-mobile-nav"
           aria-label="Application mobile"
-          className="border-t border-rule md:hidden"
+          className="absolute inset-x-0 top-full z-20 border-b border-t border-rule bg-newsprint md:hidden"
         >
           <ul className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-col px-4 py-2">
-            {navItems.map((item) => (
+            {navItems.map((item) => {
+              const active =
+                pathname === item.href ||
+                Boolean(pathname?.startsWith(`${item.href}/`));
+              return (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="flex min-h-[44px] items-center border-b border-rule px-1 py-3 font-[family-name:var(--font-ui)] text-body text-ink last:border-b-0"
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "flex min-h-[44px] items-center border-b border-rule px-1 py-3 font-[family-name:var(--font-ui)] text-body text-ink last:border-b-0",
+                    active && "font-semibold text-editorial",
+                  )}
                   onClick={() => setOpen(false)}
                 >
                   {item.label}
                 </Link>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </nav>
       ) : null}

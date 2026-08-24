@@ -17,7 +17,7 @@ export default async function ResumeDocumentPage({
   if (!document) notFound();
 
   return (
-    <div className="flex flex-1 flex-col bg-cream-paper">
+    <div className="flex min-w-0 flex-1 flex-col bg-newsprint">
       <AppHeader />
       <ResumeDocumentEditor documentId={id} documentName={document.name} initialResume={document.resume} />
     </div>

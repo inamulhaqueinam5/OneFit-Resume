@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
 import { AlertTriangle, ArrowRight, Check, FileText, RotateCcw } from "lucide-react";
+import { AppHeader } from "@/app/components/AppHeader";
 import { createMasterProfile, parseUploadedDocx, type ParsedUpload } from "./actions";
 import type { Resume } from "@/lib/resume/types";
 
@@ -59,20 +59,10 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-cream-paper">
-      <header className="mx-auto flex w-full max-w-[var(--page-max-width)] items-center justify-between px-14 py-21 md:px-28">
-        <div className="flex items-center gap-11">
-          <span className="flex h-35 w-35 items-center justify-center rounded-nav bg-forest-ink text-body font-semibold text-cream-paper">
-            OF
-          </span>
-          <span className="text-body font-semibold tracking-tight text-charcoal">
-            OneFit Resume
-          </span>
-        </div>
-        <UserButton />
-      </header>
+    <div className="flex min-w-0 flex-1 flex-col bg-newsprint">
+      <AppHeader />
 
-      <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-14 pb-70 md:px-28">
+      <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-4 pb-20 sm:px-7 md:px-14 md:pb-28">
         <div className="mb-28 max-w-2xl">
           <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
             Import
@@ -107,7 +97,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
         )}
 
         {error && (
-          <div className="mb-28 rounded-cards bg-slate-hush p-28 text-body text-charcoal">
+          <div className="mb-7 border-l-2 border-editorial bg-paper-sunken p-4 text-body text-ink-muted" role="alert">
             {error}
           </div>
         )}
@@ -127,12 +117,16 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
                   </p>
                 </div>
               </div>
+              <label htmlFor="template-file" className="text-caption font-semibold uppercase tracking-[0.08em] text-ink">
+                Word template file
+              </label>
               <input
+                id="template-file"
                 type="file"
                 name="file"
                 accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 required
-                className="text-body text-charcoal"
+                className="min-h-[44px] text-body text-ink-muted"
               />
               <button
                 type="submit"
@@ -247,7 +241,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
         )}
 
         {step === "done" && (
-          <div className="flex flex-col items-start gap-21 rounded-cards bg-keylime-wash p-28 md:p-42">
+          <div className="flex flex-col items-start gap-21 bg-paper-sunken p-7 sm:p-10" role="status" aria-live="polite">
             <Check className="h-5 w-5 text-forest-ink" aria-hidden="true" />
             <p className="text-subheading font-semibold text-forest-ink">
               {isReimport

@@ -15,7 +15,7 @@ export default async function DocumentsPage() {
   ]);
 
   return (
-    <div className="flex flex-1 flex-col bg-cream-paper">
+    <div className="flex min-w-0 flex-1 flex-col bg-newsprint">
       <AppHeader />
       <DocumentsList
         hasMasterProfile={master !== null}

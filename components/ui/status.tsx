@@ -19,6 +19,7 @@ const Status = React.forwardRef<HTMLDivElement, StatusProps>(
     <div
       ref={ref}
       role="status"
+      aria-live="polite"
       className={cn(
         "inline-flex min-h-[44px] items-center border bg-paper-raised px-3 py-2 text-caption font-medium uppercase tracking-[0.06em] font-[family-name:var(--font-mono)]",
         toneClass[tone],
