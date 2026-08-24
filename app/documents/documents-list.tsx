@@ -94,8 +94,8 @@ export function DocumentsList({
             Resume Documents
           </h1>
           <p className="mt-5 max-w-2xl text-body leading-relaxed text-ink-muted">
-            Independent copies of your Master Profile, ready to tailor for each
-            application without changing the source.
+            Create independent copies from your Master Profile or clone an
+            existing document, then tailor each one without changing its source.
           </p>
         </div>
         <div className="flex flex-col items-start gap-3 md:items-end">
