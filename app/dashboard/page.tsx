@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   if (!profile) {
     const user = await currentUser();
     return (
-      <div className="flex flex-1 flex-col bg-newsprint">
+       <div className="flex min-w-0 flex-1 flex-col bg-newsprint">
         <AppHeader />
         <EmptyState name={user?.firstName ?? undefined} />
       </div>
@@ -22,7 +22,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col bg-newsprint">
+    <div className="flex min-w-0 flex-1 flex-col bg-newsprint">
       <AppHeader />
       <MasterProfileEditor initialResume={profile} />
     </div>

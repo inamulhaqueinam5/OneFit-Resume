@@ -34,6 +34,7 @@ describe("AppHeader", () => {
     const documents = screen.getByRole("link", { name: "Resume Documents" });
 
     expect(master).toHaveAttribute("href", "/dashboard");
+    expect(master).toHaveAttribute("aria-current", "page");
     expect(documents).toHaveAttribute("href", "/documents");
   });
 

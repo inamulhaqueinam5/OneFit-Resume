@@ -42,6 +42,7 @@ describe("ImportFlow re-import state", () => {
     render(<ImportFlow existingProfile={profile} />);
 
     expect(screen.getByText(/will overwrite it after you confirm the review/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("Word template file")).toBeInTheDocument();
     fireEvent.submit(screen.getByRole("button", { name: /Parse template/i }).closest("form")!);
 
     await waitFor(() => expect(screen.getByRole("button", { name: /Confirm & update Master Profile/i })).toBeInTheDocument());

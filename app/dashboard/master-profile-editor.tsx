@@ -394,9 +394,9 @@ function EntryEditor({
   return (
     <article className="flex flex-col gap-14 rounded-cards border border-border-mist bg-cream-paper p-18">
       <div className="flex items-center justify-between gap-14">
-        <h4 className="font-faire-octave text-heading-sm text-forest-ink">
+        <h3 className="font-faire-octave text-heading-sm text-forest-ink">
           Entry {entryIndex + 1}
-        </h4>
+        </h3>
         <button
           aria-label={`Remove ${entryLabel}`}
           className="inline-flex items-center gap-7 text-caption text-forest-ink hover:text-forest-shadow"
@@ -462,8 +462,11 @@ function SectionEditor({
   onFieldRemove: (entryId: string, fieldIndex: number) => void;
 }) {
   return (
-    <section className="flex flex-col gap-18 rounded-cards bg-sage-mist p-21 md:p-28">
+    <section aria-labelledby={`section-heading-${section.id}`} className="flex flex-col gap-18 rounded-cards bg-sage-mist p-21 md:p-28">
       <div className="flex flex-col gap-14">
+        <h3 id={`section-heading-${section.id}`} className="sr-only">
+          {section.title}
+        </h3>
         <div className="flex flex-wrap items-start justify-between gap-14">
           <label className="flex min-w-0 flex-1 flex-col gap-7 text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
             Section title
@@ -751,7 +754,7 @@ export function MasterProfileEditor({
   }
 
   return (
-    <main className="master-profile-editor mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-14 pb-70 md:px-28">
+    <main className="master-profile-editor mx-auto flex min-w-0 w-full max-w-[var(--page-max-width)] flex-1 flex-col px-4 pb-20 sm:px-7 md:px-14 md:pb-28">
        <div className="flex flex-col gap-14 py-35 md:flex-row md:items-end md:justify-between print:hidden">
         <div>
              <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
@@ -811,7 +814,7 @@ export function MasterProfileEditor({
        </div>
 
        <div className="resume-editor-grid grid items-start gap-28 lg:grid-cols-[minmax(0,1fr)_minmax(390px,0.9fr)]">
-          <div id="resume-editor-pane" role="tabpanel" aria-labelledby="edit-resume-tab" aria-label="Edit resume" className={`${mobileView === "edit" ? "block" : "hidden"} min-w-0 flex-col gap-21 lg:flex print:hidden`}>
+           <div id="resume-editor-pane" role="tabpanel" aria-labelledby="edit-resume-tab" aria-label="Edit resume" className={`${mobileView === "edit" ? "block" : "hidden"} min-w-0 flex-col gap-21 lg:flex print:hidden`}>
            <ContactEditor
             contact={resume.contact}
             onChange={changeContact}
@@ -953,7 +956,7 @@ export function MasterProfileEditor({
           </div>
         </div>
 
-         <aside id="resume-preview-pane" role="tabpanel" aria-labelledby="preview-resume-tab" aria-label="Resume preview" className={`${mobileView === "preview" ? "block" : "hidden"} min-w-0 lg:block lg:sticky lg:top-21`}>
+          <aside id="resume-preview-pane" role="tabpanel" aria-labelledby="preview-resume-tab" aria-label="Resume preview" className={`${mobileView === "preview" ? "block" : "hidden"} min-w-0 lg:block lg:sticky lg:top-21`}>
            <div className="resume-preview-panel flex flex-col gap-14 rounded-cards bg-slate-hush p-14 md:p-21">
              <div className="flex items-center justify-between gap-14 px-7 print:hidden">
               <div>
