@@ -54,7 +54,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
       setParsed(result);
       setStep("review");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong while parsing the file.");
+      setError(e instanceof Error ? e.message : "Something went wrong while parsing the file. Please choose a .docx file and try again.");
     } finally {
       setIsPending(false);
     }
@@ -74,7 +74,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
       setStep("done");
       router.refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong while saving.");
+      setError(e instanceof Error ? e.message : "Something went wrong while saving. Please try again.");
     } finally {
       setIsPending(false);
     }
@@ -127,7 +127,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
                 <h2 id="overwrite-title" className="font-[family-name:var(--font-ui)] text-body font-semibold text-ink">
                   Existing Master Profile
                 </h2>
-                <p className="mt-1 font-[family-name:var(--font-body)] text-body leading-relaxed text-ink-muted">
+                <p id="overwrite-description" className="mt-1 font-[family-name:var(--font-body)] text-body leading-relaxed text-ink-muted">
                   You already have a Master Profile for{" "}
                   <span className="font-semibold text-ink">{existingProfile.contact.name || "an existing profile"}</span>.
                   {" "}Importing a new file will overwrite it after you confirm the review.
@@ -266,7 +266,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
                 <Button
                   type="button"
                   disabled={isPending}
-                  aria-describedby={isReimport ? "overwrite-title" : undefined}
+                  aria-describedby={isReimport ? "overwrite-title overwrite-description" : undefined}
                   onClick={() => void onConfirm()}
                 >
                   <Check aria-hidden="true" />
