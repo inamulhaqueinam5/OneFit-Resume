@@ -1,5 +1,9 @@
-import { ArrowRight, FileText, Layers, Printer, Sparkles } from "lucide-react";
+import { ArrowRight, FileText, Layers, Printer } from "lucide-react";
 import Link from "next/link";
+import { Brand } from "@/app/components/Brand";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { IconBox } from "@/components/ui/icon-box";
 
 const features = [
   {
@@ -7,21 +11,18 @@ const features = [
     eyebrow: "Import",
     title: "Word in, structure out",
     body: "Drop your OneFit template. Rule-based parsing turns headings and entries into an editable Master Profile — no AI, no guesswork.",
-    surface: "bg-sage-mist",
   },
   {
     icon: Layers,
     eyebrow: "Tailor",
     title: "One master, many documents",
     body: "Clone independent Resume Documents for every application. Edit sections and entries without touching your baseline.",
-    surface: "bg-mint-veil",
   },
   {
     icon: Printer,
     eyebrow: "Export",
     title: "One page, pixel-true PDF",
     body: "Compress in 10% steps until it fits. What you see in the preview is exactly what native print exports.",
-    surface: "bg-keylime-wash",
   },
 ] as const;
 
@@ -31,189 +32,188 @@ export function LandingHero({ signedIn = false }: { signedIn?: boolean }) {
     : { href: "/sign-up", label: "Get started" };
 
   return (
-    <div className="flex flex-1 flex-col bg-cream-paper">
-      <header className="mx-auto flex w-full max-w-[var(--page-max-width)] items-center justify-between px-14 py-21 md:px-28">
-        <div className="flex items-center gap-11">
-          <span className="flex h-35 w-35 items-center justify-center rounded-nav bg-forest-ink text-body font-semibold text-cream-paper">
-            OF
-          </span>
-          <span className="text-body font-semibold tracking-tight text-charcoal">
-            OneFit Resume
-          </span>
-        </div>
-        <nav className="hidden items-center gap-28 text-body text-charcoal md:flex">
-          <a href="#features" className="transition-colors hover:text-forest-ink">
-            Features
-          </a>
-          <a href="#how" className="transition-colors hover:text-forest-ink">
-            How it works
-          </a>
-          <a href="#faq" className="transition-colors hover:text-forest-ink">
-            FAQ
-          </a>
-        </nav>
-        <div className="flex items-center gap-21">
-          {!signedIn && (
-            <Link
-              href="/sign-in"
-              className="text-body font-semibold text-charcoal transition-colors hover:text-forest-ink"
-            >
-              Sign in
-            </Link>
-          )}
-          <Link
-            href={primaryCta.href}
-            className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-18 py-11 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
+    <div className="newsprint-texture flex flex-1 flex-col text-ink">
+      <header className="border-b border-rule bg-newsprint/90">
+        <div className="mx-auto flex w-full max-w-[var(--page-max-width)] items-center justify-between gap-4 px-4 py-3 md:px-7">
+          <Brand />
+          <nav
+            aria-label="Landing"
+            className="hidden items-center gap-1 md:flex"
           >
-            {primaryCta.label}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
+            {[
+              { href: "#features", label: "Features" },
+              { href: "#how", label: "How it works" },
+              { href: "#faq", label: "FAQ" },
+            ].map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="inline-flex min-h-[44px] items-center px-3 py-2 font-[family-name:var(--font-ui)] text-body text-ink transition-colors hover:text-editorial focus-visible:outline focus-visible:outline-[length:var(--focus-ring-width)] focus-visible:outline-offset-[var(--focus-ring-offset)] focus-visible:outline-[var(--focus-ring-color)]"
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2">
+            {!signedIn && (
+              <Button asChild variant="ghost">
+                <Link href="/sign-in">Sign in</Link>
+              </Button>
+            )}
+            <Button asChild>
+              <Link href={primaryCta.href}>
+                {primaryCta.label}
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </header>
 
       <main className="flex flex-1 flex-col">
-        <section className="mx-auto w-full max-w-[var(--page-max-width)] px-14 pb-56 pt-28 md:px-28 md:pt-42">
-          <div className="grid items-stretch gap-21 lg:grid-cols-2 lg:gap-28">
-            <div className="flex flex-col justify-center gap-28 rounded-cards bg-keylime-wash p-28 md:p-42">
-              <span className="w-fit rounded-badges bg-cream-paper px-14 py-9 text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
+        <section className="border-b border-rule bg-newsprint/80">
+          <div className="mx-auto grid w-full max-w-[var(--page-max-width)] lg:grid-cols-2">
+            <div className="flex flex-col justify-center gap-6 border-rule px-4 py-12 md:px-7 md:py-16 lg:border-r">
+              <p className="w-fit border border-ink bg-paper-raised px-3 py-2 font-[family-name:var(--font-mono)] text-caption font-semibold uppercase tracking-[0.08em] text-ink">
                 OneFit Resume
-              </span>
-              <h1 className="font-faire-octave text-heading leading-[1.15] tracking-[-0.03em] text-forest-ink md:text-heading-lg">
+              </p>
+              <h1 className="max-w-xl font-[family-name:var(--font-display)] text-heading leading-[1.08] tracking-[-0.02em] text-ink md:text-heading-lg">
                 Build perfectly scaled, one-page resumes.
               </h1>
-              <p className="max-w-md text-subheading leading-relaxed text-charcoal">
+              <p className="max-w-md font-[family-name:var(--font-body)] text-subheading leading-relaxed text-ink-muted">
                 Import your Word template, edit sections and entries, and export
                 a tailored PDF that always fits on a single page — without
                 wrestling Word again.
               </p>
-              <div className="flex flex-wrap items-center gap-14" id="get-started">
-                <Link
-                  href={primaryCta.href}
-                  className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-21 py-14 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
-                >
-                  {signedIn ? primaryCta.label : "Start free"}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-                <a
-                  href="#how"
-                  className="inline-flex items-center gap-9 rounded-buttons border border-border-mist bg-cream-paper px-21 py-14 text-body text-forest-ink transition-colors hover:bg-keylime-wash"
-                >
-                  See how it works
-                </a>
+              <div
+                className="flex flex-wrap items-center gap-3"
+                id="get-started"
+              >
+                <Button asChild size="lg">
+                  <Link href={primaryCta.href}>
+                    {signedIn ? primaryCta.label : "Start free"}
+                    <ArrowRight aria-hidden="true" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <a href="#how">See how it works</a>
+                </Button>
               </div>
-              <div className="flex flex-wrap gap-9 pt-7">
+              <ul className="flex flex-wrap gap-2 border-t border-rule pt-5">
                 {["Master Profile", "Resume Documents", "Native PDF"].map(
                   (label) => (
-                    <span
+                    <li
                       key={label}
-                      className="rounded-badges bg-cream-paper px-14 py-9 text-body text-forest-ink"
+                      className="border border-ink px-3 py-2 font-[family-name:var(--font-mono)] text-caption uppercase tracking-[0.08em] text-ink"
                     >
                       {label}
-                    </span>
+                    </li>
                   ),
                 )}
-              </div>
+              </ul>
             </div>
 
-            <div className="flex flex-col justify-center rounded-cards bg-slate-hush p-28 md:p-42">
-              <div className="flex flex-col gap-14">
-                <div className="rounded-cards bg-cream-paper p-28">
-                  <div className="mb-18 flex items-center justify-between border-b border-border-mist pb-14">
-                    <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
-                        Resume Document
-                      </p>
-                      <p className="mt-7 font-faire-octave text-heading-sm text-forest-ink">
-                        Product Designer
-                      </p>
-                    </div>
-                    <span className="rounded-badges bg-keylime-wash px-14 py-7 text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
-                      1 page
-                    </span>
+            <div className="flex flex-col justify-center bg-paper-sunken px-4 py-12 md:px-7 md:py-16">
+              <Card
+                aria-label="Sample Resume Document"
+                className="bg-paper-raised p-0"
+              >
+                <div className="flex items-start justify-between gap-4 border-b border-rule px-5 py-4">
+                  <div>
+                    <p className="font-[family-name:var(--font-mono)] text-caption font-semibold uppercase tracking-[0.1em] text-ink-muted">
+                      Resume Document
+                    </p>
+                    <p className="mt-2 font-[family-name:var(--font-display)] text-heading-sm text-ink">
+                      Product Designer
+                    </p>
                   </div>
-                  <div className="space-y-14">
-                    <div className="h-11 w-2/3 rounded-full bg-mint-veil" />
-                    <div className="h-7 w-full rounded-full bg-border-mist" />
-                    <div className="h-7 w-5/6 rounded-full bg-border-mist" />
-                    <div className="mt-21 h-11 w-1/2 rounded-full bg-sage-mist" />
-                    <div className="h-7 w-full rounded-full bg-border-mist" />
-                    <div className="h-7 w-4/5 rounded-full bg-border-mist" />
-                    <div className="h-7 w-3/4 rounded-full bg-border-mist" />
-                  </div>
+                  <span className="border border-editorial px-2 py-1 font-[family-name:var(--font-mono)] text-caption font-semibold uppercase tracking-[0.08em] text-editorial">
+                    1 page
+                  </span>
                 </div>
-                <div className="grid grid-cols-3 gap-14">
-                  {["CRM", "EHR", "RCM"].map((label) => (
+                <div className="space-y-3 px-5 py-5" aria-hidden="true">
+                  <div className="h-3 w-2/3 bg-ink/15" />
+                  <div className="h-2 w-full bg-rule" />
+                  <div className="h-2 w-5/6 bg-rule" />
+                  <div className="mt-5 h-3 w-1/2 bg-ink/20" />
+                  <div className="h-2 w-full bg-rule" />
+                  <div className="h-2 w-4/5 bg-rule" />
+                  <div className="h-2 w-3/4 bg-rule" />
+                </div>
+                <div className="grid grid-cols-3 border-t border-rule">
+                  {["CRM", "EHR", "RCM"].map((label, index) => (
                     <div
                       key={label}
-                      className="rounded-cards bg-cream-paper px-14 py-18 text-center"
+                      className={`px-3 py-4 text-center ${
+                        index < 2 ? "border-r border-rule" : ""
+                      }`}
                     >
-                      <Sparkles
-                        className="mx-auto mb-9 h-4 w-4 text-forest-ink"
-                        aria-hidden="true"
-                      />
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
+                      <p className="font-[family-name:var(--font-mono)] text-caption font-semibold uppercase tracking-[0.1em] text-ink">
                         {label}
                       </p>
                     </div>
                   ))}
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </section>
 
         <section
           id="features"
-          className="mx-auto w-full max-w-[var(--page-max-width)] px-14 pb-56 md:px-28"
+          className="mx-auto w-full max-w-[var(--page-max-width)] px-4 py-14 md:px-7 md:py-20"
         >
-          <div className="mb-42 max-w-xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
+          <div className="mb-10 max-w-2xl border-b border-rule pb-8">
+            <p className="font-[family-name:var(--font-mono)] text-caption font-semibold uppercase tracking-[0.08em] text-ink">
               Why OneFit
             </p>
-            <h2 className="mt-14 font-faire-octave text-heading text-forest-ink">
+            <h2 className="mt-3 font-[family-name:var(--font-display)] text-heading text-ink">
               Editorial calm. Clinical precision.
             </h2>
-            <p className="mt-18 text-body leading-relaxed text-charcoal">
+            <p className="mt-4 font-[family-name:var(--font-body)] text-body leading-relaxed text-ink-muted">
               A botanical greenhouse on cream paper — soft panels, weight-300
               serif headlines, and a single forest-ink action color. The app
               chrome feels quiet; your resume stays exact.
             </p>
           </div>
-          <div className="grid gap-21 md:grid-cols-3">
-            {features.map(({ icon: Icon, eyebrow, title, body, surface }) => (
+          <div className="grid border border-rule bg-paper-raised/90 md:grid-cols-3">
+            {features.map(({ icon: Icon, eyebrow, title, body }, index) => (
               <article
                 key={title}
-                className={`flex flex-col gap-18 rounded-cards p-28 md:p-42 ${surface}`}
+                className={`flex flex-col gap-4 p-6 md:p-8 ${
+                  index < features.length - 1
+                    ? "border-b border-rule md:border-b-0 md:border-r"
+                    : ""
+                }`}
               >
-                <span className="flex h-42 w-42 items-center justify-center rounded-nav bg-cream-paper text-forest-ink">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
+                <IconBox label={title}>
+                  <Icon aria-hidden="true" />
+                </IconBox>
+                <p className="font-[family-name:var(--font-mono)] text-caption font-semibold uppercase tracking-[0.08em] text-ink">
                   {eyebrow}
                 </p>
-                <h3 className="font-faire-octave text-heading-sm text-forest-ink">
+                <h3 className="font-[family-name:var(--font-display)] text-heading-sm text-ink">
                   {title}
                 </h3>
-                <p className="text-body leading-relaxed text-charcoal">{body}</p>
+                <p className="font-[family-name:var(--font-body)] text-body leading-relaxed text-ink-muted">
+                  {body}
+                </p>
               </article>
             ))}
           </div>
         </section>
 
-        <section
-          id="how"
-          className="border-y border-border-mist bg-keylime-wash/40"
-        >
-          <div className="mx-auto grid w-full max-w-[var(--page-max-width)] gap-42 px-14 py-56 md:grid-cols-2 md:px-28 md:py-70">
+        <section id="how" className="border-y border-rule bg-paper-sunken">
+          <div className="mx-auto grid w-full max-w-[var(--page-max-width)] gap-10 px-4 py-14 md:grid-cols-2 md:px-7 md:py-20">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
+              <p className="font-[family-name:var(--font-mono)] text-caption font-semibold uppercase tracking-[0.08em] text-ink">
                 How it works
               </p>
-              <h2 className="mt-14 font-faire-octave text-heading text-forest-ink">
+              <h2 className="mt-3 font-[family-name:var(--font-display)] text-heading text-ink">
                 From Word file to print-ready page in three calm steps.
               </h2>
             </div>
-            <ol className="flex flex-col gap-0">
+            <ol className="flex flex-col border border-rule bg-paper-raised">
               {[
                 {
                   step: "01",
@@ -233,18 +233,18 @@ export function LandingHero({ signedIn = false }: { signedIn?: boolean }) {
               ].map((item, index) => (
                 <li
                   key={item.step}
-                  className={`grid grid-cols-[auto_1fr] gap-18 py-21 ${
-                    index < 2 ? "border-b border-border-mist" : ""
+                  className={`grid grid-cols-[auto_1fr] gap-4 px-5 py-5 ${
+                    index < 2 ? "border-b border-rule" : ""
                   }`}
                 >
-                  <span className="font-faire-octave text-heading-sm text-forest-ink">
+                  <span className="font-[family-name:var(--font-mono)] text-caption font-semibold text-editorial">
                     {item.step}
                   </span>
                   <div>
-                    <h3 className="text-subheading font-semibold text-forest-ink">
+                    <h3 className="font-[family-name:var(--font-ui)] text-subheading font-semibold text-ink">
                       {item.title}
                     </h3>
-                    <p className="mt-9 text-body leading-relaxed text-charcoal">
+                    <p className="mt-2 font-[family-name:var(--font-body)] text-body leading-relaxed text-ink-muted">
                       {item.body}
                     </p>
                   </div>
@@ -256,16 +256,16 @@ export function LandingHero({ signedIn = false }: { signedIn?: boolean }) {
 
         <section
           id="faq"
-          className="mx-auto w-full max-w-[var(--page-max-width)] px-14 py-56 md:px-28 md:py-70"
+          className="mx-auto w-full max-w-[var(--page-max-width)] px-4 py-14 md:px-7 md:py-20"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-forest-ink">
+          <h2 className="font-[family-name:var(--font-display)] text-heading text-ink">
             Quick answer
-          </p>
-          <div className="mt-28 flex flex-col">
+          </h2>
+          <div className="mt-8 flex flex-col border-t border-rule">
             {[
               {
                 q: "Does the theme change my resume layout?",
-                a: "No. App chrome uses the botanical theme; the A4 resume surface keeps the official template design exactly.",
+                a: "No. App chrome uses the Newsprint system; the A4 resume surface keeps the official template design exactly.",
               },
               {
                 q: "Will editing a Resume Document change my Master Profile?",
@@ -275,17 +275,15 @@ export function LandingHero({ signedIn = false }: { signedIn?: boolean }) {
                 q: "How does the one-page fit work?",
                 a: "Per-document compression shrinks content in 10% steps. The same scale is mirrored in native browser print.",
               },
-            ].map((item, index) => (
+            ].map((item) => (
               <div
                 key={item.q}
-                className={`grid gap-18 py-28 md:grid-cols-2 ${
-                  index < 2 ? "border-b border-border-mist" : ""
-                }`}
+                className="grid gap-4 border-b border-rule py-7 md:grid-cols-2"
               >
-                <h3 className="font-faire-octave text-heading-sm text-forest-ink md:text-heading md:leading-[1.2]">
+                <h3 className="font-[family-name:var(--font-display)] text-heading-sm text-ink md:text-heading md:leading-[1.15]">
                   {item.q}
                 </h3>
-                <p className="text-body leading-relaxed text-charcoal md:pt-7">
+                <p className="font-[family-name:var(--font-body)] text-body leading-relaxed text-ink-muted md:pt-1">
                   {item.a}
                 </p>
               </div>
@@ -293,31 +291,30 @@ export function LandingHero({ signedIn = false }: { signedIn?: boolean }) {
           </div>
         </section>
 
-        <section className="mx-auto w-full max-w-[var(--page-max-width)] px-14 pb-70 md:px-28">
-          <div className="flex flex-col items-start justify-between gap-28 rounded-cards bg-sage-mist p-28 md:flex-row md:items-center md:p-42">
+        <section className="border-t border-rule">
+          <div className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-col items-start justify-between gap-6 px-4 py-14 md:flex-row md:items-center md:px-7 md:py-16">
             <div className="max-w-lg">
-              <h2 className="font-faire-octave text-heading text-forest-ink">
+              <h2 className="font-[family-name:var(--font-display)] text-heading text-ink">
                 Ready when you are.
               </h2>
-              <p className="mt-14 text-body leading-relaxed text-charcoal">
+              <p className="mt-3 font-[family-name:var(--font-body)] text-body leading-relaxed text-ink-muted">
                 Keep one Master Profile. Ship as many tailored one-page resumes
                 as you need.
               </p>
             </div>
-            <Link
-              href={primaryCta.href}
-              className="inline-flex shrink-0 items-center gap-9 rounded-buttons bg-forest-ink px-28 py-18 text-body text-cream-paper transition-colors hover:bg-forest-shadow"
-            >
-              {primaryCta.label}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+            <Button asChild size="lg">
+              <Link href={primaryCta.href}>
+                {primaryCta.label}
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-border-mist">
-        <div className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-col gap-14 px-14 py-28 text-body text-charcoal md:flex-row md:items-center md:justify-between md:px-28">
-          <p className="font-semibold text-forest-ink">OneFit Resume</p>
+      <footer className="border-t border-rule">
+        <div className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-col gap-2 px-4 py-6 font-[family-name:var(--font-ui)] text-body text-ink-muted md:flex-row md:items-center md:justify-between md:px-7">
+          <p className="font-semibold text-ink">OneFit Resume</p>
           <p>Open source · Built for the official OneFit Word template</p>
         </div>
       </footer>

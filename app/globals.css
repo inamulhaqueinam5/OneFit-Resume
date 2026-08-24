@@ -1,22 +1,66 @@
 @import "tailwindcss";
-@import "../design idea resource/theme.css";
+@import "./styles/newsprint-theme.css";
 
 @theme inline {
-  --color-background: var(--color-cream-paper);
-  --color-foreground: var(--color-forest-ink);
-  --font-sans: var(--font-suisse-intl);
-  --font-serif: var(--font-faire-octave);
+  --color-background: var(--color-newsprint);
+  --color-foreground: var(--color-ink);
+  --font-sans: var(--font-ui);
+  --font-serif: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
-  font-family: var(--font-suisse-intl), ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-ui);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-editorial) 22%, transparent);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.newsprint-texture {
+  background-color: var(--color-newsprint);
+  background-image:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-ink) 3%, transparent) 0,
+      transparent 48px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 23px,
+      color-mix(in srgb, var(--color-ink) 4%, transparent) 24px
+    );
+}
+
+.newsprint-rule {
+  border-color: var(--color-rule);
 }
 
 @media print {

@@ -1,0 +1,119 @@
+@theme {
+  /* Core Newsprint palette */
+  --color-newsprint: #F9F9F7;
+  --color-ink: #111111;
+  --color-rule: #E5E5E0;
+  --color-editorial: #CC0000;
+  --color-ink-muted: #4A4A45;
+  --color-ink-faint: #8A8A82;
+  --color-paper-raised: #FFFFFF;
+  --color-paper-sunken: #F0F0EB;
+  --color-editorial-ink: #990000;
+
+  /* Semantic aliases used across app UI */
+  --color-background: var(--color-newsprint);
+  --color-foreground: var(--color-ink);
+  --color-border: var(--color-rule);
+  --color-muted: var(--color-ink-muted);
+  --color-accent: var(--color-editorial);
+  --color-card: var(--color-paper-raised);
+  --color-card-foreground: var(--color-ink);
+
+  /* Backward-compatible token names (map botanical names → Newsprint) */
+  --color-cream-paper: var(--color-newsprint);
+  --color-forest-ink: var(--color-ink);
+  --color-charcoal: var(--color-ink-muted);
+  --color-border-mist: var(--color-rule);
+  --color-forest-shadow: var(--color-ink);
+  --color-keylime-wash: var(--color-paper-sunken);
+  --color-mint-veil: var(--color-paper-sunken);
+  --color-sage-mist: var(--color-paper-sunken);
+  --color-slate-hush: var(--color-paper-sunken);
+
+  /* Type families — next/font sets --font-playfair/lora/inter/jetbrains on <html> */
+  --font-display: var(--font-playfair), "Playfair Display", "Times New Roman",
+    ui-serif, Georgia, Cambria, Times, serif;
+  --font-body: var(--font-lora), Lora, "Palatino Linotype", Palatino, ui-serif,
+    Georgia, serif;
+  --font-ui: var(--font-inter), Inter, "Helvetica Neue", Helvetica, Arial,
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", "SF Mono", Menlo,
+    Consolas, "Liberation Mono", ui-monospace, monospace;
+
+  /* Legacy font token aliases */
+  --font-faire-octave: var(--font-display);
+  --font-suisse-intl: var(--font-ui);
+  --font-sans: var(--font-ui);
+  --font-serif: var(--font-display);
+
+  /* Type scale */
+  --text-caption: 0.6875rem;
+  --leading-caption: 1.4;
+  --text-body: 0.875rem;
+  --leading-body: 1.55;
+  --text-subheading: 1.125rem;
+  --leading-subheading: 1.35;
+  --text-heading-sm: 1.375rem;
+  --leading-heading-sm: 1.25;
+  --text-heading: 2.25rem;
+  --leading-heading: 1.15;
+  --tracking-heading: -0.02em;
+  --text-heading-lg: 3rem;
+  --leading-heading-lg: 1.08;
+  --tracking-heading-lg: -0.025em;
+  --text-display: 3.75rem;
+  --leading-display: 1.02;
+  --tracking-display: -0.03em;
+
+  /* Spacing */
+  --spacing-4: 4px;
+  --spacing-7: 7px;
+  --spacing-9: 9px;
+  --spacing-11: 11px;
+  --spacing-14: 14px;
+  --spacing-18: 18px;
+  --spacing-21: 21px;
+  --spacing-28: 28px;
+  --spacing-35: 35px;
+  --spacing-42: 42px;
+  --spacing-49: 49px;
+  --spacing-56: 56px;
+  --spacing-70: 70px;
+  --spacing-76: 76px;
+  --spacing-99: 99px;
+  --spacing-156: 156px;
+
+  /* Sharp geometry only */
+  --radius: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-full: 0;
+  --radius-full-2: 0;
+  --radius-nav: 0;
+  --radius-cards: 0;
+  --radius-badges: 0;
+  --radius-buttons: 0;
+  --radius-sections: 0;
+
+  /* Borders / rules */
+  --border-width-hairline: 1px;
+  --border-width-rule: 1px;
+  --border-width-strong: 2px;
+
+  /* Focus */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-editorial);
+
+  /* Motion */
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --ease-newsprint: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /* Layout */
+  --page-max-width: 1200px;
+  --touch-min: 44px;
+}

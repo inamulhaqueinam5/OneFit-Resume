@@ -9,12 +9,15 @@ export default async function SignUpPage() {
   if (userId) redirect("/dashboard");
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-cream-paper px-14 py-70">
-      <div className="mb-28">
+    <div className="newsprint-texture flex flex-1 flex-col items-center justify-center px-4 py-16">
+      <div className="mb-8">
         <Brand />
       </div>
       <ClerkLoading>
-        <p className="text-body text-charcoal" role="status">
+        <p
+          className="font-[family-name:var(--font-mono)] text-caption uppercase tracking-[0.08em] text-ink-muted"
+          role="status"
+        >
           Loading sign-up...
         </p>
       </ClerkLoading>

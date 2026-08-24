@@ -1,3 +1,9 @@
-# App UI Follows the Ease Health Botanical Theme
+# App UI Follows the Newsprint Design System
 
-The app's UI chrome (editor, navigation, document list, import/review wizard, buttons, modals, auth screens) follows the Ease Health botanical-greenhouse style reference in `design idea resource/` — forest ink (#0f3e17) on cream paper, sage/keylime/mint/slate tinted panels, weight-300 serif headings paired with a humanist sans, no shadows (depth via tinted layers), 14px rounded corners and pill badges. The resume page itself (A4 preview + print CSS) is a separate design surface that keeps the official template's exact design per ADR-0006; the theme must never leak into it. Design tokens are consumed from `design idea resource/` (tokens.json / variables.css / theme.css), and the commercial fonts (Faire Octave, Suisse Intl) fall back to the documented substitutes (Cormorant Garamond, Inter).
+Supersedes the Ease Health botanical theme for app chrome.
+
+The app's UI chrome (editor, navigation, document list, import/review wizard, buttons, modals, auth screens, landing) follows a permanent light Newsprint system: warm paper `#F9F9F7`, ink `#111111`, rule `#E5E5E0`, editorial red `#CC0000`, sharp 0-radius geometry, flat surfaces with structural borders, Playfair Display (display), Lora (body), Inter (UI), and JetBrains Mono (metadata), with deliberate fallbacks. Tokens live in `app/styles/newsprint-theme.css` and are wired through `app/globals.css`. Shared primitives live under `components/ui/`.
+
+The resume page itself (A4 preview + print CSS) remains a separate design surface that keeps the official template's exact design per ADR-0006; Newsprint must never leak into ResumeRenderer.
+
+Botanical token names in older components may temporarily alias to Newsprint values until those routes are restyled in later tickets.
