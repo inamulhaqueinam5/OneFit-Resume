@@ -902,10 +902,10 @@ export function MasterProfileEditor({
               </div>
             </div>
 
-             {resume.sections.length === 0 ? (
-              <div className="rounded-cards bg-keylime-wash p-28 text-body text-charcoal">
-                Add a Section to start building your Master Profile.
-              </div>
+              {resume.sections.length === 0 ? (
+               <div className="rounded-cards bg-keylime-wash p-28 text-body text-charcoal">
+                 Add a Section to start building your {documentMode ? "Resume Document" : "Master Profile"}.
+               </div>
              ) : (
                <DndContext onDragEnd={handleDragEnd}>
                <SortableContext items={resume.sections.map((section) => `section:${section.id}`)} strategy={verticalListSortingStrategy}>
