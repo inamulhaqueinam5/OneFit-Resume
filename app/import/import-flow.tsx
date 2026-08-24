@@ -54,7 +54,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
       setParsed(result);
       setStep("review");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "The file could not be parsed. Choose a .docx file and try again.");
+      setError(e instanceof Error ? e.message : "Something went wrong while parsing the file.");
     } finally {
       setIsPending(false);
     }
@@ -74,7 +74,7 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
       setStep("done");
       router.refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "The Master Profile could not be saved. Try again.");
+      setError(e instanceof Error ? e.message : "Something went wrong while saving.");
     } finally {
       setIsPending(false);
     }
@@ -138,10 +138,14 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
         )}
 
         {error && (
-          <div className="mt-7 border border-editorial bg-paper-raised p-5 text-body text-editorial" role="alert">
-            <p className="font-semibold">We could not complete that action.</p>
-            <p className="mt-1 text-ink-muted">{error}</p>
-          </div>
+          <Card className="mt-7 border-editorial" role="alert" aria-labelledby="import-error-title">
+            <CardContent className="p-5">
+              <h2 id="import-error-title" className="font-[family-name:var(--font-ui)] text-body font-semibold text-editorial">
+                We could not complete that action.
+              </h2>
+              <p className="mt-1 font-[family-name:var(--font-body)] text-body text-ink-muted">{error}</p>
+            </CardContent>
+          </Card>
         )}
 
         <div className="mt-7">
@@ -221,9 +225,12 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-4 font-[family-name:var(--font-body)] text-body text-ink-muted">
-                      No Sections were found. You can still save this Contact and add Sections later.
-                    </p>
+                    <div className="mt-5 border-t border-rule pt-5">
+                      <p className="font-[family-name:var(--font-ui)] text-body font-semibold text-ink">No Sections found</p>
+                      <p className="mt-1 font-[family-name:var(--font-body)] text-body text-ink-muted">
+                        You can still save this Contact and add Sections later in your Master Profile.
+                      </p>
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -256,7 +263,12 @@ export function ImportFlow({ existingProfile }: { existingProfile: Resume | null
               </Card>
 
               <div className="flex flex-wrap gap-3">
-                <Button type="button" disabled={isPending} onClick={() => void onConfirm()}>
+                <Button
+                  type="button"
+                  disabled={isPending}
+                  aria-describedby={isReimport ? "overwrite-title" : undefined}
+                  onClick={() => void onConfirm()}
+                >
                   <Check aria-hidden="true" />
                   {isPending ? "Saving..." : isReimport ? "Confirm & update Master Profile" : "Confirm & create Master Profile"}
                 </Button>
