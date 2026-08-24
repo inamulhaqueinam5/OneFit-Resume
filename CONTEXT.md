@@ -37,7 +37,7 @@ A Section added by the user within a Resume Document that does not belong to the
 _Avoid_: Unknown section, ad-hoc section
 
 **Section Catalog**:
-The data-driven set of Section types a resume can contain, derived from the official template rather than hardcoded. A Resume Document draws its Sections from it and can show, hide, add, or remove them per document.
+The data-driven set of Section types a resume can contain, one entry per Section of the official template (title, keywords, Entry-field shape). A Resume Document draws its Sections from it and can show, hide, add, or remove them per document.
 _Avoid_: Section registry, hardcoded sections, known sections
 
 **Compression**:
