@@ -25,10 +25,14 @@ function errorMessage(action: ResumeDocumentMutation): string {
   }
 }
 
-function formatUpdated(updatedAt: string): string {
-  const date = new Date(updatedAt);
+function formatDate(value: string): string {
+  const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  return `Updated ${date.toLocaleDateString()}`;
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 export function DocumentsList({
@@ -80,23 +84,23 @@ export function DocumentsList({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-14 pb-70 md:px-28">
-      <div className="flex flex-col gap-14 py-35 md:flex-row md:items-end md:justify-between">
+    <main className="mx-auto flex w-full max-w-[var(--page-max-width)] flex-1 flex-col px-4 pb-20 sm:px-7 md:px-14 md:pb-28">
+      <div className="flex flex-col gap-7 border-b border-rule py-14 sm:py-21 md:flex-row md:items-end md:justify-between md:gap-14">
         <div>
-          <p className="text-caption font-semibold uppercase tracking-[0.08em] text-forest-ink">
-            Resume Documents
+          <p className="font-mono text-caption font-semibold uppercase tracking-[0.12em] text-editorial">
+            Document desk / {documents.length.toString().padStart(2, "0")}
           </p>
-          <h1 className="mt-9 font-faire-octave text-heading text-forest-ink">
-            Tailored resumes for every application
+          <h1 className="mt-4 max-w-3xl font-display text-heading text-ink sm:text-heading-lg">
+            Resume Documents
           </h1>
-          <p className="mt-14 max-w-2xl text-body leading-relaxed text-charcoal">
-            Create independent documents from your Master Profile or clone an
-            existing one — each tailored freely without touching the others.
+          <p className="mt-5 max-w-2xl text-body leading-relaxed text-ink-muted">
+            Create independent copies from your Master Profile or clone an
+            existing document, then tailor each one without changing its source.
           </p>
         </div>
-        <div className="flex flex-col items-start gap-9 md:items-end">
+        <div className="flex flex-col items-start gap-3 md:items-end">
           <button
-            className="inline-flex items-center gap-9 rounded-buttons bg-forest-ink px-21 py-14 text-body text-cream-paper transition-colors hover:bg-forest-shadow disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-[48px] items-center gap-2 border border-ink bg-ink px-5 py-3 text-body text-newsprint transition-colors hover:border-editorial hover:bg-editorial disabled:cursor-not-allowed disabled:opacity-50"
             disabled={pending !== null || !hasMasterProfile}
             type="button"
             onClick={() => void runAction("create")}
@@ -105,7 +109,7 @@ export function DocumentsList({
             Create from Master Profile
           </button>
           {!hasMasterProfile && (
-            <p className="text-caption text-charcoal">
+            <p className="text-caption text-ink-muted">
               Set up your Master Profile first to create new documents.
             </p>
           )}
@@ -114,7 +118,7 @@ export function DocumentsList({
 
       {error && (
         <p
-          className="mb-21 rounded-cards bg-slate-hush p-18 text-body text-charcoal"
+          className="mb-7 border-l-2 border-editorial bg-paper-sunken p-4 text-body text-ink-muted"
           role="alert"
         >
           {error}
@@ -122,15 +126,15 @@ export function DocumentsList({
       )}
 
       {documents.length === 0 ? (
-        <div className="flex flex-col items-start gap-18 rounded-cards bg-keylime-wash p-28 md:p-42">
-          <span className="flex h-42 w-42 items-center justify-center rounded-nav bg-cream-paper text-forest-ink">
+        <div className="flex flex-col items-start gap-5 border-b border-rule bg-paper-sunken p-7 sm:p-10">
+          <span className="flex h-11 w-11 items-center justify-center border border-ink bg-paper-raised text-ink">
             <FileText className="h-5 w-5" aria-hidden="true" />
           </span>
           <div>
-            <h2 className="font-faire-octave text-heading-sm text-forest-ink">
+            <h2 className="font-display text-heading-sm text-ink">
               No Resume Documents yet
             </h2>
-            <p className="mt-9 text-body leading-relaxed text-charcoal">
+            <p className="mt-3 max-w-xl text-body leading-relaxed text-ink-muted">
               {hasMasterProfile
                 ? "Create your first document from your Master Profile when you are ready to tailor a resume for a specific application."
                 : "Import your template to create a Master Profile, then return here to tailor documents from it."}
@@ -138,27 +142,32 @@ export function DocumentsList({
           </div>
         </div>
       ) : (
-        <div className="grid gap-21 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-0 border-l border-rule md:grid-cols-2 lg:grid-cols-3">
           {documents.map((document) => (
             <article
-              className="flex flex-col justify-between gap-18 rounded-cards border border-border-mist bg-cream-paper p-21"
+              className="group flex min-h-56 flex-col justify-between gap-7 border-b border-r border-t border-rule bg-paper-raised p-5 transition-colors hover:bg-paper-sunken sm:p-7"
               key={document.id}
             >
               <div className="flex items-start justify-between gap-14">
-                <span className="flex h-35 w-35 shrink-0 items-center justify-center rounded-nav bg-mint-veil text-forest-ink">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-rule bg-paper-sunken text-ink">
                   <FileText className="h-4 w-4" aria-hidden="true" />
                 </span>
-                <span className="rounded-badges bg-sage-mist px-11 py-7 text-caption text-forest-ink">
-                  {formatUpdated(document.updatedAt)}
+                <span className="font-mono text-caption text-ink-faint">
+                  Updated {formatDate(document.updatedAt)}
                 </span>
               </div>
-               <Link href={`/documents/${document.id}`} className="font-faire-octave text-heading-sm text-forest-ink hover:text-forest-shadow">
-                 {document.name}
-               </Link>
-              <div className="flex items-center gap-9">
+              <div>
+                <Link href={`/documents/${document.id}`} className="font-display text-heading-sm text-ink underline decoration-transparent decoration-1 underline-offset-4 transition-colors group-hover:decoration-editorial hover:text-editorial">
+                  {document.name}
+                </Link>
+                <p className="mt-2 font-mono text-caption uppercase tracking-[0.06em] text-ink-faint">
+                  Created {formatDate(document.createdAt)}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   aria-label={`Clone ${document.name}`}
-                  className="inline-flex items-center gap-7 rounded-buttons border border-border-mist bg-cream-paper px-14 py-9 text-caption font-semibold text-forest-ink transition-colors hover:bg-keylime-wash disabled:opacity-50"
+                  className="inline-flex min-h-[44px] items-center gap-2 border border-rule bg-paper-raised px-3 py-2 text-caption font-semibold text-ink transition-colors hover:border-ink disabled:opacity-50"
                   disabled={pending !== null}
                   type="button"
                   onClick={() => void runAction("clone", document.id)}
@@ -168,7 +177,7 @@ export function DocumentsList({
                 </button>
                 <button
                   aria-label={`Delete ${document.name}`}
-                  className="inline-flex items-center gap-7 rounded-buttons border border-border-mist bg-cream-paper px-14 py-9 text-caption font-semibold text-forest-ink transition-colors hover:bg-slate-hush disabled:opacity-50"
+                  className="inline-flex min-h-[44px] items-center gap-2 border border-rule bg-paper-raised px-3 py-2 text-caption font-semibold text-ink transition-colors hover:border-editorial hover:text-editorial disabled:opacity-50"
                   disabled={pending !== null}
                   type="button"
                   onClick={() => void runAction("delete", document.id)}
