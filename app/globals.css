@@ -63,6 +63,19 @@ body {
   border-color: var(--color-rule);
 }
 
+.master-profile-editor button,
+.master-profile-editor select,
+.master-profile-editor input,
+.master-profile-editor textarea {
+  min-height: var(--touch-min);
+}
+
+.master-profile-editor button:not(:disabled):hover {
+  transition: background-color var(--duration-fast) var(--ease-newsprint),
+    color var(--duration-fast) var(--ease-newsprint),
+    border-color var(--duration-fast) var(--ease-newsprint);
+}
+
 @media print {
   /* Keep the resume in normal flow so browser pagination can produce multiple pages. */
   body:has(.resume-print-target) .resume-print-target {
@@ -85,5 +98,9 @@ body {
     display: block;
     padding: 0;
     background: #fff;
+  }
+
+  body:has(.resume-print-target) #resume-preview-pane {
+    display: block !important;
   }
 }
