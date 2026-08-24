@@ -181,3 +181,42 @@ describe("parseDocx review bucket", () => {
     ]);
   });
 });
+
+describe("parseDocx heading synonyms", () => {
+  it("maps the 'Work History' synonym to the Experience section", () => {
+    const { resume, review } = parseDocx(
+      "<p><strong>Work History</strong></p><p>Acme Corp</p>",
+    );
+
+    expect(resume.sections.map((section) => section.catalogId)).toEqual(["experience"]);
+    expect(resume.sections[0].title).toBe("Experience");
+    expect(review).toEqual([]);
+  });
+
+  it("maps a synonym heading for every section without loss", () => {
+    const html = [
+      "<p><strong>Profile</strong></p><p>I am a developer.</p>",
+      "<p><strong>Employment History</strong></p><p>Acme Corp</p>",
+      "<p><strong>Academic Background</strong></p><p>BSc</p>",
+      "<p><strong>Technical Skills</strong></p><p><strong>Languages</strong> Java, TypeScript</p>",
+      "<p><strong>Project Experience</strong></p><p>SkillBridge</p>",
+      "<p><strong>Research Publications</strong></p><p>Paper one</p>",
+      "<p><strong>Leadership and Activities</strong></p><p>Volunteer</p>",
+      "<p><strong>Recommendations</strong></p><p>Prof. X</p>",
+    ].join("");
+
+    const { resume, review } = parseDocx(html);
+
+    expect(resume.sections.map((section) => section.catalogId)).toEqual([
+      "professional-summary",
+      "experience",
+      "education",
+      "skills",
+      "projects",
+      "publications",
+      "extracurricular-activities",
+      "references",
+    ]);
+    expect(review).toEqual([]);
+  });
+});
