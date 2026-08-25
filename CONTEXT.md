@@ -1,15 +1,15 @@
 # OneFit Resume
 
-A web application that turns a predefined Word resume template into an editable one-page PDF, removing the need to maintain MS Word files. It keeps one Master Profile as the baseline and produces any number of independent Resume Documents tailored to specific job applications.
+A web application that turns a predefined Word resume template into an editable one-page PDF, removing the need to maintain MS Word files. It keeps one Master Profile as the source of all default data and produces any number of independent Resume Documents tailored to specific job applications.
 
 ## Language
 
 **Master Profile**:
-The user's primary repository of all default resume data (Sections and Entries), used as the baseline for creating new Resume Documents.
-_Avoid_: Main profile, default resume
+The user's primary repository of all default resume data (Sections and Entries), used as the starting point for creating new Resume Documents.
+_Avoid_: Main profile, default resume, baseline
 
 **Resume Document**:
-An independent, editable, and clonable resume instance tailored for a specific job application. It is a copy at creation time; modifying it does not affect the Master Profile, and vice versa.
+An independent, editable resume instance tailored for a specific job application. It is created either as a fresh copy of the Master Profile or by cloning another Resume Document; modifying it does not affect the Master Profile or the source document, and vice versa.
 _Avoid_: Draft, tailored resume, snapshot, saved version
 
 **Section**:
@@ -40,6 +40,14 @@ _Avoid_: Unknown section, ad-hoc section
 The data-driven set of Section types a resume can contain, one entry per Section of the official template (title, keywords, Entry-field shape). A Resume Document draws its Sections from it and can show, hide, add, or remove them per document.
 _Avoid_: Section registry, hardcoded sections, known sections
 
+**Official Template**:
+The one predefined Word (.docx) file whose structure defines both the Section Catalog and what an Import can recognize. It is the only supported import input, downloaded by users, filled in, and imported back.
+_Avoid_: Word template file, sample file
+
 **Compression**:
 The per-document scale reduction that shrinks a Resume Document in 10% steps so its content fits on a single page. It is persisted on the document and mirrored exactly in the exported PDF.
 _Avoid_: Zoom, shrink, scale-down
+
+**Import**:
+The flow that reads a filled-in Official Template and turns its contents into Master Profile data after a mandatory review step. It writes only to the Master Profile; existing Resume Documents are never modified by it.
+_Avoid_: Upload, parse, conversion
