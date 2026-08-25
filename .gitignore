@@ -49,3 +49,6 @@ NOTES-from-gemini.md
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+.vercel
+.env*
